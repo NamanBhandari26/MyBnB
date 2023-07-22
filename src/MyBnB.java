@@ -1,20 +1,14 @@
 import java.sql.*;
 
+import JDBC.Service;
+
 public class MyBnB {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws SQLException, ClassNotFoundException {
 		// TODO Auto-generated method stub
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/Test","root", "1234");
-			Statement stmt = con.createStatement();
-			System.out.println("inserting records");
-			String sql="Insert into test1 values(43)";
-			stmt.executeUpdate(sql);
-		}
-		catch(Exception ex) {
-			System.out.println(ex);
-		}
+		System.out.println("Hello, welcome to MyBnB");
+        Service service = new Service();
+        service.startServices();
 	}
 
 }
