@@ -36,8 +36,26 @@ public class Listing {
   }
 
   // Create (Insert) operation
-  public static int insert(Connection connection, String Type, double Longitude, double Latitude,
-      String Address, String PostalCode, String City, String Country, int HostUID) {
+  public static int insert(Connection connection, String Type, double Longitude, double Latitude, String Address,
+      String PostalCode, String City, String Country, int HostUID) {
+
+    boolean isHost = false;
+
+    try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM User WHERE UID = ?")) {
+      statement.setInt(1, HostUID);
+      try (ResultSet resultSet = statement.executeQuery()) {
+        if (resultSet.next()) {
+          isHost = resultSet.getBoolean("isHost");
+        }
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+
+    if (!isHost) {
+      return -1;
+    }
+
     try (PreparedStatement statement = connection.prepareStatement(
         "INSERT INTO Listing (Type, Longitude, Latitude, Address, PostalCode, City, Country, HostUID) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
         Statement.RETURN_GENERATED_KEYS)) {
@@ -64,6 +82,23 @@ public class Listing {
   }
 
   public void insert() {
+    boolean isHost = false;
+
+    try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM User WHERE UID = ?")) {
+      statement.setInt(1, HostUID);
+      try (ResultSet resultSet = statement.executeQuery()) {
+        if (resultSet.next()) {
+          isHost = resultSet.getBoolean("isHost");
+        }
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+
+    if (!isHost) {
+      return;
+    }
+
     try (PreparedStatement statement = connection.prepareStatement(
         "INSERT INTO Listing (Type, Longitude, Latitude, Address, PostalCode, City, Country, HostUID) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
         Statement.RETURN_GENERATED_KEYS)) {

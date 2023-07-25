@@ -27,6 +27,24 @@ public class ListingReview {
 
   // Create (Insert) operation
   public void insert() {
+    boolean hasRented = false;
+
+    try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM Rented WHERE UID = ? AND LID = ?")) {
+      statement.setInt(1, UID);
+      statement.setInt(2, LID);
+      try (ResultSet resultSet = statement.executeQuery()) {
+        if (resultSet.next()) {
+          hasRented = true;
+        }
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+
+    if (!hasRented) {
+      return;
+    }
+    
     try (PreparedStatement statement = connection.prepareStatement(
         "INSERT INTO ListingReview (UID, LID, rating, comment) VALUES (?, ?, ?, ?)")) {
       statement.setInt(1, this.UID);
@@ -40,6 +58,25 @@ public class ListingReview {
   }
 
   public static void insert(Connection connection, int UID, int LID, int rating, String comment) {
+
+    boolean hasRented = false;
+
+    try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM Rented WHERE UID = ? AND LID = ?")) {
+      statement.setInt(1, UID);
+      statement.setInt(2, LID);
+      try (ResultSet resultSet = statement.executeQuery()) {
+        if (resultSet.next()) {
+          hasRented = true;
+        }
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+
+    if (!hasRented) {
+      return;
+    }
+
     try (PreparedStatement statement = connection.prepareStatement(
         "INSERT INTO ListingReview (UID, LID, rating, comment) VALUES (?, ?, ?, ?)")) {
       statement.setInt(1, UID);

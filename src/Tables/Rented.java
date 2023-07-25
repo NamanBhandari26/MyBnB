@@ -34,6 +34,24 @@ public class Rented {
   // Create (Insert) operation
   public static int insert(Connection connection, int LID, int UID, double Total, String StartDate,
       String EndDate, boolean isCanceled) {
+
+    boolean isRenter = false;
+
+    try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM User WHERE UID = ?")) {
+      statement.setInt(1, UID);
+      try (ResultSet resultSet = statement.executeQuery()) {
+        if (resultSet.next()) {
+          isRenter = resultSet.getBoolean("isRenter");
+        }
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+
+    if (!isRenter) {
+      return -1;
+    }
+
     try (PreparedStatement statement = connection.prepareStatement(
         "INSERT INTO Rented (LID, UID, Total, StartDate, EndDate, isCanceled) VALUES (?, ?, ?, ?, ?, ?)",
         Statement.RETURN_GENERATED_KEYS)) {
@@ -58,6 +76,24 @@ public class Rented {
   }
 
   public void insert() {
+    
+    boolean isRenter = false;
+
+    try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM User WHERE UID = ?")) {
+      statement.setInt(1, UID);
+      try (ResultSet resultSet = statement.executeQuery()) {
+        if (resultSet.next()) {
+          isRenter = resultSet.getBoolean("isRenter");
+        }
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+
+    if (!isRenter) {
+      return;
+    }
+
     try (PreparedStatement statement = connection.prepareStatement(
         "INSERT INTO Rented (LID, UID, Total, StartDate, EndDate, isCanceled) VALUES (?, ?, ?, ?, ?, ?)",
         Statement.RETURN_GENERATED_KEYS)) {

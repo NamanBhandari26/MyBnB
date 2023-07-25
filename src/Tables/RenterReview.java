@@ -28,6 +28,25 @@ public class RenterReview {
 
   // Create (Insert) operation
   public void insert() {
+
+      boolean hasHosted = false;
+
+      try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM Rented NATRUAL JOIN Listing WHERE UID = ? AND HostUID = ?")) {
+        statement.setInt(1, this.RenterUID);
+        statement.setInt(2, this.HostUID);
+        try (ResultSet resultSet = statement.executeQuery()) {
+          if (resultSet.next()) {
+            hasHosted = true;
+          }
+        }
+      } catch (SQLException e) {
+        e.printStackTrace();
+      }
+
+      if (!hasHosted) {
+        return;
+      }
+
     try (PreparedStatement statement = connection.prepareStatement(
         "INSERT INTO RenterReview (HostUID, RenterUID, rating, comment) VALUES (?, ?, ?, ?)")) {
       statement.setInt(1, this.HostUID);
@@ -42,6 +61,25 @@ public class RenterReview {
 
   public static void insert(Connection connection, int HostUID, int RenterUID, int rating,
       String comment) {
+
+      boolean hasHosted = false;
+
+      try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM Rented NATRUAL JOIN Listing WHERE UID = ? AND HostUID = ?")) {
+        statement.setInt(1, RenterUID);
+        statement.setInt(2, HostUID);
+        try (ResultSet resultSet = statement.executeQuery()) {
+          if (resultSet.next()) {
+            hasHosted = true;
+          }
+        }
+      } catch (SQLException e) {
+        e.printStackTrace();
+      }
+
+      if (!hasHosted) {
+        return;
+      }
+    
     try (PreparedStatement statement = connection.prepareStatement(
         "INSERT INTO RenterReview (HostUID, RenterUID, rating, comment) VALUES (?, ?, ?, ?)")) {
       statement.setInt(1, HostUID);
