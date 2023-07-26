@@ -20,24 +20,7 @@ public class Amenities {
     this.Type = Type;
   }
 
-  // Create (Insert) operation
-  public void insert() {
-    try (PreparedStatement statement = connection.prepareStatement(
-        "INSERT INTO Amenities (Type) VALUES (?)", Statement.RETURN_GENERATED_KEYS)) {
-      statement.setString(1, this.Type);
-      statement.executeUpdate();
-
-      // Get the generated AID (if applicable)
-      try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
-        if (generatedKeys.next()) {
-          this.AID = generatedKeys.getInt(1);
-        }
-      }
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
-  }
-
+  // Create (Insert) operation (static approach)
   public static int insert(Connection connection, String Type) {
     try (PreparedStatement statement = connection.prepareStatement(
         "INSERT INTO Amenities (Type) VALUES (?)", Statement.RETURN_GENERATED_KEYS)) {
@@ -56,12 +39,10 @@ public class Amenities {
     return -1;
   }
 
-
-  // Read (Select) operation by AID
+  // Read (Select) operation by AID (static approach)
   public static Amenities selectById(Connection connection, int AID) {
     Amenities amenities = null;
-    try (PreparedStatement statement =
-        connection.prepareStatement("SELECT * FROM Amenities WHERE AID = ?")) {
+    try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM Amenities WHERE AID = ?")) {
       statement.setInt(1, AID);
       try (ResultSet resultSet = statement.executeQuery()) {
         if (resultSet.next()) {
@@ -78,8 +59,7 @@ public class Amenities {
 
   // Update operation
   public void update() {
-    try (PreparedStatement statement =
-        connection.prepareStatement("UPDATE Amenities SET Type = ? WHERE AID = ?")) {
+    try (PreparedStatement statement = connection.prepareStatement("UPDATE Amenities SET Type = ? WHERE AID = ?")) {
       statement.setString(1, this.Type);
       statement.setInt(2, this.AID);
       statement.executeUpdate();
@@ -90,8 +70,7 @@ public class Amenities {
 
   // Delete operation
   public void delete() {
-    try (PreparedStatement statement =
-        connection.prepareStatement("DELETE FROM Amenities WHERE AID = ?")) {
+    try (PreparedStatement statement = connection.prepareStatement("DELETE FROM Amenities WHERE AID = ?")) {
       statement.setInt(1, this.AID);
       statement.executeUpdate();
     } catch (SQLException e) {
@@ -99,18 +78,20 @@ public class Amenities {
     }
   }
 
-  // Function to create the "Amenities" table if it doesn't exist
+  // Function to create the "Amenities" table if it doesn't exist (static
+  // approach)
   public static void createTable(Connection connection) {
     try (Statement statement = connection.createStatement()) {
-      String sql = "CREATE TABLE IF NOT EXISTS Amenities (" + "AID INT AUTO_INCREMENT PRIMARY KEY,"
-          + "Type VARCHAR(255) NOT NULL)";
+      String sql = "CREATE TABLE IF NOT EXISTS Amenities (" +
+          "AID INT AUTO_INCREMENT PRIMARY KEY," +
+          "Type VARCHAR(255) NOT NULL)";
       statement.executeUpdate(sql);
     } catch (SQLException e) {
       e.printStackTrace();
     }
   }
 
-  // Function to drop the "Amenities" table if it exists
+  // Function to drop the "Amenities" table if it exists (static approach)
   public static void dropTable(Connection connection) {
     try (Statement statement = connection.createStatement()) {
       String sql = "DROP TABLE IF EXISTS Amenities";

@@ -31,7 +31,7 @@ public class Rented {
     this.isCanceled = isCanceled;
   }
 
-  // Create (Insert) operation
+  // Static method to create (Insert) operation
   public static int insert(Connection connection, int LID, int UID, double Total, String StartDate,
       String EndDate, boolean isCanceled) {
 
@@ -75,52 +75,10 @@ public class Rented {
     return -1;
   }
 
-  public void insert() {
-    
-    boolean isRenter = false;
-
-    try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM User WHERE UID = ?")) {
-      statement.setInt(1, UID);
-      try (ResultSet resultSet = statement.executeQuery()) {
-        if (resultSet.next()) {
-          isRenter = resultSet.getBoolean("isRenter");
-        }
-      }
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
-
-    if (!isRenter) {
-      return;
-    }
-
-    try (PreparedStatement statement = connection.prepareStatement(
-        "INSERT INTO Rented (LID, UID, Total, StartDate, EndDate, isCanceled) VALUES (?, ?, ?, ?, ?, ?)",
-        Statement.RETURN_GENERATED_KEYS)) {
-      statement.setInt(1, this.LID);
-      statement.setInt(2, this.UID);
-      statement.setDouble(3, this.Total);
-      statement.setString(4, this.StartDate);
-      statement.setString(5, this.EndDate);
-      statement.setBoolean(6, this.isCanceled);
-      statement.executeUpdate();
-
-      // Get the generated RID (if applicable)
-      try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
-        if (generatedKeys.next()) {
-          this.RID = generatedKeys.getInt(1);
-        }
-      }
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
-  }
-
   // Read (Select) operation by RID
   public static Rented selectById(Connection connection, int RID) {
     Rented rented = null;
-    try (PreparedStatement statement =
-        connection.prepareStatement("SELECT * FROM Rented WHERE RID = ?")) {
+    try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM Rented WHERE RID = ?")) {
       statement.setInt(1, RID);
       try (ResultSet resultSet = statement.executeQuery()) {
         if (resultSet.next()) {
@@ -159,8 +117,7 @@ public class Rented {
 
   // Delete operation
   public void delete() {
-    try (PreparedStatement statement =
-        connection.prepareStatement("DELETE FROM Rented WHERE RID = ?")) {
+    try (PreparedStatement statement = connection.prepareStatement("DELETE FROM Rented WHERE RID = ?")) {
       statement.setInt(1, this.RID);
       statement.executeUpdate();
     } catch (SQLException e) {
@@ -168,23 +125,27 @@ public class Rented {
     }
   }
 
-  // Function to create the "Rented" table if it doesn't exist
+  // Function to create the "Rented" table if it doesn't exist (static approach)
   public static void createTable(Connection connection) {
     try (Statement statement = connection.createStatement()) {
-      String sql = "CREATE TABLE IF NOT EXISTS Rented (" + "RID INT AUTO_INCREMENT PRIMARY KEY,"
-          + "LID INT NOT NULL," + "UID INT NOT NULL," + "Total DOUBLE NOT NULL,"
-          + "StartDate DATE NOT NULL," + "EndDate DATE NOT NULL," + "isCanceled BOOLEAN NOT NULL,"
-          + "FOREIGN KEY (LID) REFERENCES Listing(LID),"
-          + "FOREIGN KEY (UID) REFERENCES User(UID))"; // "Listing" and "User" should be replaced
-                                                       // with the actual table names of the Listing
-                                                       // and User tables, respectively
+      String sql = "CREATE TABLE IF NOT EXISTS Rented (" +
+          "RID INT AUTO_INCREMENT PRIMARY KEY," +
+          "LID INT NOT NULL," +
+          "UID INT NOT NULL," +
+          "Total DOUBLE NOT NULL," +
+          "StartDate DATE NOT NULL," +
+          "EndDate DATE NOT NULL," +
+          "isCanceled BOOLEAN NOT NULL," +
+          "FOREIGN KEY (LID) REFERENCES Listing(LID)," +
+          "FOREIGN KEY (UID) REFERENCES User(UID))"; // "Listing" and "User" should be replaced
+      // with the actual table names of the Listing and User tables, respectively
       statement.executeUpdate(sql);
     } catch (SQLException e) {
       e.printStackTrace();
     }
   }
 
-  // Function to drop the "Rented" table if it exists
+  // Function to drop the "Rented" table if it exists (static approach)
   public static void dropTable(Connection connection) {
     try (Statement statement = connection.createStatement()) {
       String sql = "DROP TABLE IF EXISTS Rented";

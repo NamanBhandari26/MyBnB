@@ -26,60 +26,29 @@ public class RenterReview {
     this.comment = comment;
   }
 
-  // Create (Insert) operation
-  public void insert() {
-
-      boolean hasHosted = false;
-
-      try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM Rented NATRUAL JOIN Listing WHERE UID = ? AND HostUID = ?")) {
-        statement.setInt(1, this.RenterUID);
-        statement.setInt(2, this.HostUID);
-        try (ResultSet resultSet = statement.executeQuery()) {
-          if (resultSet.next()) {
-            hasHosted = true;
-          }
-        }
-      } catch (SQLException e) {
-        e.printStackTrace();
-      }
-
-      if (!hasHosted) {
-        return;
-      }
-
-    try (PreparedStatement statement = connection.prepareStatement(
-        "INSERT INTO RenterReview (HostUID, RenterUID, rating, comment) VALUES (?, ?, ?, ?)")) {
-      statement.setInt(1, this.HostUID);
-      statement.setInt(2, this.RenterUID);
-      statement.setInt(3, this.rating);
-      statement.setString(4, this.comment);
-      statement.executeUpdate();
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
-  }
-
+  // Static method to create (Insert) operation
   public static void insert(Connection connection, int HostUID, int RenterUID, int rating,
       String comment) {
 
-      boolean hasHosted = false;
+    boolean hasHosted = false;
 
-      try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM Rented NATRUAL JOIN Listing WHERE UID = ? AND HostUID = ?")) {
-        statement.setInt(1, RenterUID);
-        statement.setInt(2, HostUID);
-        try (ResultSet resultSet = statement.executeQuery()) {
-          if (resultSet.next()) {
-            hasHosted = true;
-          }
+    try (PreparedStatement statement = connection
+        .prepareStatement("SELECT * FROM Rented NATURAL JOIN Listing WHERE UID = ? AND HostUID = ?")) {
+      statement.setInt(1, RenterUID);
+      statement.setInt(2, HostUID);
+      try (ResultSet resultSet = statement.executeQuery()) {
+        if (resultSet.next()) {
+          hasHosted = true;
         }
-      } catch (SQLException e) {
-        e.printStackTrace();
       }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
 
-      if (!hasHosted) {
-        return;
-      }
-    
+    if (!hasHosted) {
+      return;
+    }
+
     try (PreparedStatement statement = connection.prepareStatement(
         "INSERT INTO RenterReview (HostUID, RenterUID, rating, comment) VALUES (?, ?, ?, ?)")) {
       statement.setInt(1, HostUID);
@@ -138,21 +107,22 @@ public class RenterReview {
     }
   }
 
-  // Function to create the "RenterReview" table if it doesn't exist
+  // Function to create the "RenterReview" table if it doesn't exist (static
+  // approach)
   public static void createTable(Connection connection) {
     try (Statement statement = connection.createStatement()) {
       String sql = "CREATE TABLE IF NOT EXISTS RenterReview (" + "HostUID INT NOT NULL,"
           + "RenterUID INT NOT NULL," + "rating INT NOT NULL," + "comment VARCHAR(255),"
           + "PRIMARY KEY (HostUID, RenterUID)," + "FOREIGN KEY (HostUID) REFERENCES User(UID),"
           + "FOREIGN KEY (RenterUID) REFERENCES User(UID))"; // "User" should be replaced with the
-                                                             // actual table name of the User table
+      // actual table name of the User table
       statement.executeUpdate(sql);
     } catch (SQLException e) {
       e.printStackTrace();
     }
   }
 
-  // Function to drop the "RenterReview" table if it exists
+  // Function to drop the "RenterReview" table if it exists (static approach)
   public static void dropTable(Connection connection) {
     try (Statement statement = connection.createStatement()) {
       String sql = "DROP TABLE IF EXISTS RenterReview";

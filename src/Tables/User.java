@@ -35,32 +35,7 @@ public class User {
     this.isHost = isHost;
   }
 
-  // Create (Insert) operation
-  public void insert() {
-    try (PreparedStatement statement = connection.prepareStatement(
-        "INSERT INTO User (Name, Address, DOB, Occupation, SIN, Payment, isRenter, isHost) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-        Statement.RETURN_GENERATED_KEYS)) {
-      statement.setString(1, this.Name);
-      statement.setString(2, this.Address);
-      statement.setString(3, this.DOB);
-      statement.setString(4, this.Occupation);
-      statement.setString(5, this.SIN);
-      statement.setString(6, this.Payment);
-      statement.setBoolean(7, this.isRenter);
-      statement.setBoolean(8, this.isHost);
-      statement.executeUpdate();
-
-      // Get the generated UID (if applicable)
-      try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
-        if (generatedKeys.next()) {
-          this.UID = generatedKeys.getInt(1);
-        }
-      }
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
-  }
-
+  // Static method to create (Insert) operation
   public static int insert(Connection connection, String Name, String Address, String DOB,
       String Occupation, String SIN, String Payment, boolean isRenter, boolean isHost) {
     try (PreparedStatement statement = connection.prepareStatement(
@@ -90,8 +65,7 @@ public class User {
   // Read (Select) operation by UID
   public static User selectById(Connection connection, int UID) {
     User user = null;
-    try (PreparedStatement statement =
-        connection.prepareStatement("SELECT * FROM User WHERE UID = ?")) {
+    try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM User WHERE UID = ?")) {
       statement.setInt(1, UID);
       try (ResultSet resultSet = statement.executeQuery()) {
         if (resultSet.next()) {
@@ -103,8 +77,7 @@ public class User {
           String Payment = resultSet.getString("Payment");
           boolean isRenter = resultSet.getBoolean("isRenter");
           boolean isHost = resultSet.getBoolean("isHost");
-          user =
-              new User(connection, Name, Address, DOB, Occupation, SIN, Payment, isRenter, isHost);
+          user = new User(connection, Name, Address, DOB, Occupation, SIN, Payment, isRenter, isHost);
           user.setUID(UID);
         }
       }
@@ -135,8 +108,7 @@ public class User {
 
   // Delete operation
   public void delete() {
-    try (PreparedStatement statement =
-        connection.prepareStatement("DELETE FROM User WHERE UID = ?")) {
+    try (PreparedStatement statement = connection.prepareStatement("DELETE FROM User WHERE UID = ?")) {
       statement.setInt(1, this.UID);
       statement.executeUpdate();
     } catch (SQLException e) {
@@ -144,7 +116,7 @@ public class User {
     }
   }
 
-  // Function to create the "User" table if it doesn't exist
+  // Function to create the "User" table if it doesn't exist (static approach)
   public static void createTable(Connection connection) {
     try (Statement statement = connection.createStatement()) {
       String sql = "CREATE TABLE IF NOT EXISTS User (" + "UID INT AUTO_INCREMENT PRIMARY KEY,"
@@ -160,7 +132,7 @@ public class User {
     }
   }
 
-  // Function to drop the "User" table if it exists
+  // Function to drop the "User" table if it exists (static approach)
   public static void dropTable(Connection connection) {
     try (Statement statement = connection.createStatement()) {
       String sql = "DROP TABLE IF EXISTS User";

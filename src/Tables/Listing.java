@@ -35,10 +35,9 @@ public class Listing {
     this.HostUID = HostUID;
   }
 
-  // Create (Insert) operation
-  public static int insert(Connection connection, String Type, double Longitude, double Latitude, String Address,
-      String PostalCode, String City, String Country, int HostUID) {
-
+  // Static method to create (Insert) operation
+  public static int insert(Connection connection, String Type, double Longitude, double Latitude,
+      String Address, String PostalCode, String City, String Country, int HostUID) {
     boolean isHost = false;
 
     try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM User WHERE UID = ?")) {
@@ -81,53 +80,10 @@ public class Listing {
     return -1;
   }
 
-  public void insert() {
-    boolean isHost = false;
-
-    try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM User WHERE UID = ?")) {
-      statement.setInt(1, HostUID);
-      try (ResultSet resultSet = statement.executeQuery()) {
-        if (resultSet.next()) {
-          isHost = resultSet.getBoolean("isHost");
-        }
-      }
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
-
-    if (!isHost) {
-      return;
-    }
-
-    try (PreparedStatement statement = connection.prepareStatement(
-        "INSERT INTO Listing (Type, Longitude, Latitude, Address, PostalCode, City, Country, HostUID) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-        Statement.RETURN_GENERATED_KEYS)) {
-      statement.setString(1, this.Type);
-      statement.setDouble(2, this.Longitude);
-      statement.setDouble(3, this.Latitude);
-      statement.setString(4, this.Address);
-      statement.setString(5, this.PostalCode);
-      statement.setString(6, this.City);
-      statement.setString(7, this.Country);
-      statement.setInt(8, this.HostUID);
-      statement.executeUpdate();
-
-      // Get the generated LID (if applicable)
-      try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
-        if (generatedKeys.next()) {
-          this.LID = generatedKeys.getInt(1);
-        }
-      }
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
-  }
-
   // Read (Select) operation by LID
   public static Listing selectById(Connection connection, int LID) {
     Listing listing = null;
-    try (PreparedStatement statement =
-        connection.prepareStatement("SELECT * FROM Listing WHERE LID = ?")) {
+    try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM Listing WHERE LID = ?")) {
       statement.setInt(1, LID);
       try (ResultSet resultSet = statement.executeQuery()) {
         if (resultSet.next()) {
@@ -171,8 +127,7 @@ public class Listing {
 
   // Delete operation
   public void delete() {
-    try (PreparedStatement statement =
-        connection.prepareStatement("DELETE FROM Listing WHERE LID = ?")) {
+    try (PreparedStatement statement = connection.prepareStatement("DELETE FROM Listing WHERE LID = ?")) {
       statement.setInt(1, this.LID);
       statement.executeUpdate();
     } catch (SQLException e) {
@@ -180,15 +135,20 @@ public class Listing {
     }
   }
 
-  // Function to create the "Listing" table if it doesn't exist
+  // Function to create the "Listing" table if it doesn't exist (static approach)
   public static void createTable(Connection connection) {
     try (Statement statement = connection.createStatement()) {
-      String sql = "CREATE TABLE IF NOT EXISTS Listing (" + "LID INT AUTO_INCREMENT PRIMARY KEY,"
-          + "Type VARCHAR(255) NOT NULL," + "Longitude DOUBLE NOT NULL,"
-          + "Latitude DOUBLE NOT NULL," + "Address VARCHAR(255) NOT NULL,"
-          + "PostalCode VARCHAR(20) NOT NULL," + "City VARCHAR(100) NOT NULL,"
-          + "Country VARCHAR(100) NOT NULL," + "HostUID INT NOT NULL,"
-          + "FOREIGN KEY (HostUID) REFERENCES User(UID))";
+      String sql = "CREATE TABLE IF NOT EXISTS Listing (" +
+          "LID INT AUTO_INCREMENT PRIMARY KEY," +
+          "Type VARCHAR(255) NOT NULL," +
+          "Longitude DOUBLE NOT NULL," +
+          "Latitude DOUBLE NOT NULL," +
+          "Address VARCHAR(255) NOT NULL," +
+          "PostalCode VARCHAR(20) NOT NULL," +
+          "City VARCHAR(100) NOT NULL," +
+          "Country VARCHAR(100) NOT NULL," +
+          "HostUID INT NOT NULL," +
+          "FOREIGN KEY (HostUID) REFERENCES User(UID))";
 
       statement.executeUpdate(sql);
     } catch (SQLException e) {
@@ -196,7 +156,7 @@ public class Listing {
     }
   }
 
-  // Function to drop the "Listing" table if it exists
+  // Function to drop the "Listing" table if it exists (static approach)
   public static void dropTable(Connection connection) {
     try (Statement statement = connection.createStatement()) {
       String sql = "DROP TABLE IF EXISTS Listing";
