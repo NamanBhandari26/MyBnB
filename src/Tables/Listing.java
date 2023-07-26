@@ -238,4 +238,54 @@ public class Listing {
   public void setHostUID(int HostUID) {
     this.HostUID = HostUID;
   }
+
+  // Functions to support Operations
+
+  // Function to check if the listing is available for a specific date range
+  public boolean isAvailable(Connection connection, String startDate, String endDate) {
+    try (PreparedStatement statement = connection.prepareStatement(
+        "SELECT COUNT(*) FROM Availability WHERE LID = ? AND Date BETWEEN ? AND ? AND isAvailable = true")) {
+      statement.setInt(1, this.LID);
+      statement.setString(2, startDate);
+      statement.setString(3, endDate);
+      try (ResultSet resultSet = statement.executeQuery()) {
+        if (resultSet.next()) {
+          int count = resultSet.getInt(1);
+          return count > 0;
+        }
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+    return false;
+  }
+
+  // Function to set the price of the listing for a specific date range
+  public void setPrice(Connection connection, String startDate, String endDate, double newPrice) {
+    try (PreparedStatement statement = connection.prepareStatement(
+        "UPDATE Availability SET Price = ? WHERE LID = ? AND Date BETWEEN ? AND ? AND isAvailable = true")) {
+      statement.setDouble(1, newPrice);
+      statement.setInt(2, this.LID);
+      statement.setString(3, startDate);
+      statement.setString(4, endDate);
+      statement.executeUpdate();
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+  }
+
+  // Function to update the availability of the listing for a specific date range
+  public void updateAvailability(Connection connection, String startDate, String endDate, boolean isAvailable) {
+    try (PreparedStatement statement = connection.prepareStatement(
+        "UPDATE Availability SET isAvailable = ? WHERE LID = ? AND Date BETWEEN ? AND ?")) {
+      statement.setBoolean(1, isAvailable);
+      statement.setInt(2, this.LID);
+      statement.setString(3, startDate);
+      statement.setString(4, endDate);
+      statement.executeUpdate();
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+  }
+
 }
