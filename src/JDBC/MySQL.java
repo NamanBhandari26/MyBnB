@@ -150,4 +150,8 @@ public class MySQL implements SQL {
     Availability.insert(connection, lid3, "2020-04-11", 99);
   }
 
+  public Connection getConnection() {
+    return this.connection;
+  }
+
 }

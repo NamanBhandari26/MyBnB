@@ -211,4 +211,43 @@ public class Rented {
   public void setCanceled(boolean isCanceled) {
     this.isCanceled = isCanceled;
   }
+
+  // Functions to support Operations
+
+  // Helper method to check if a renter has completed a stay recently
+  public static boolean hasRecentStay(Connection connection, int RenterUID) {
+    String sql = "SELECT COUNT(*) AS count FROM Rented WHERE UID = ? AND isCanceled = false";
+    try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+      stmt.setInt(1, RenterUID);
+
+      ResultSet rs = stmt.executeQuery();
+      if (rs.next()) {
+        int count = rs.getInt("count");
+        return count > 0;
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+
+    return false;
+  }
+
+  // Helper method to check if a host has rented the listing recently
+  public static boolean hasRecentBooking(Connection connection, int HostUID, int RenterUID) {
+    String sql = "SELECT COUNT(*) AS count FROM Rented WHERE LID IN (SELECT LID FROM Listing WHERE HostUID = ?) AND UID = ? AND isCanceled = false";
+    try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+      stmt.setInt(1, HostUID);
+      stmt.setInt(2, RenterUID);
+
+      ResultSet rs = stmt.executeQuery();
+      if (rs.next()) {
+        int count = rs.getInt("count");
+        return count > 0;
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+
+    return false;
+  }
 }

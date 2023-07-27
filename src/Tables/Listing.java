@@ -5,6 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 public class Listing {
   // Database connection attribute
@@ -286,6 +288,50 @@ public class Listing {
     } catch (SQLException e) {
       e.printStackTrace();
     }
+  }
+
+  // Check if the listing has any future bookings
+  public boolean hasFutureBookings(Connection connection) {
+    String sql = "SELECT COUNT(*) AS count FROM Rented WHERE LID = ? AND StartDate > ?";
+    try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+      stmt.setInt(1, this.LID);
+
+      // Get the current date
+      Calendar calendar = Calendar.getInstance();
+      SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+      String currentDateStr = dateFormat.format(calendar.getTime());
+      stmt.setString(2, currentDateStr);
+
+      ResultSet rs = stmt.executeQuery();
+      if (rs.next()) {
+        int count = rs.getInt("count");
+        return count > 0;
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+
+    return false;
+  }
+
+  // Check if the listing is booked in the date range [startDate, endDate]
+  public boolean isBooked(Connection connection, String startDate, String endDate) {
+    String sql = "SELECT COUNT(*) AS count FROM Rented WHERE LID = ? AND StartDate <= ? AND EndDate >= ?";
+    try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+      stmt.setInt(1, this.LID);
+      stmt.setString(2, endDate);
+      stmt.setString(3, startDate);
+
+      ResultSet rs = stmt.executeQuery();
+      if (rs.next()) {
+        int count = rs.getInt("count");
+        return count > 0;
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+
+    return false;
   }
 
 }
