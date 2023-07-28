@@ -3,6 +3,7 @@ package JDBC;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import Tables.Amenities;
 import Tables.Availability;
@@ -46,6 +47,15 @@ public class MySQL implements SQL {
     RenterReview.dropTable(connection);
     Has.dropTable(connection);
     Availability.dropTable(connection);
+  }
+
+  // Function to drop the database
+  public void dropDatabase() {
+    try (Statement statement = connection.createStatement()) {
+      statement.executeUpdate("DROP DATABASE IF EXISTS MyBnB;");
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
   }
 
   public void addData() throws SQLException {

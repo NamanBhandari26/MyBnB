@@ -9,5 +9,7 @@ public interface SQL {
 
 	public void addData() throws SQLException;
 
+	public void dropDatabase();
+
 	public Connection getConnection();
 }

@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Scanner;
 
 import Queries.Operations;
+import Queries.Display;
 import Queries.Queries;
-import Tables.Listing;
 
 public class Service {
     public MySQL database;
@@ -247,7 +247,7 @@ public class Service {
                         boolean sortByPriceAscending = scanner.nextBoolean();
                         scanner.nextLine(); // Consume the newline character
 
-                        List<Listing> listingsByLocation = Queries.searchListingsByLocation(database.getConnection(),
+                        List<Display> listingsByLocation = Queries.searchListingsByLocation(database.getConnection(),
                                 searchLatitude, searchLongitude, maxDistance, sortByPriceAscending);
                         System.out.println("Listings found within " + maxDistance + " km of the specified location:");
                         displayListings(listingsByLocation);
@@ -261,7 +261,7 @@ public class Service {
                         boolean sortByPriceAscendingByPostal = scanner.nextBoolean();
                         scanner.nextLine(); // Consume the newline character
 
-                        List<Listing> listingsByPostalCode = Queries.searchListingsByPostalCode(
+                        List<Display> listingsByPostalCode = Queries.searchListingsByPostalCode(
                                 database.getConnection(), searchPostalCode, sortByPriceAscendingByPostal);
                         System.out.println("Listings found within the same and adjacent postal codes:");
                         displayListings(listingsByPostalCode);
@@ -272,11 +272,11 @@ public class Service {
                         System.out.println("Enter address for search:");
                         String searchAddress = scanner.nextLine();
 
-                        Listing foundListingByAddress = Queries.searchListingByAddress(database.getConnection(),
+                        Display foundListingByAddress = Queries.searchListingByAddress(database.getConnection(),
                                 searchAddress);
                         if (foundListingByAddress != null) {
                             System.out.println("Listing found with the specified address:");
-                            displayListing(foundListingByAddress);
+                            foundListingByAddress.displayDetails();
                         } else {
                             System.out.println("No listing found with the specified address.");
                         }
@@ -285,11 +285,6 @@ public class Service {
                     // Inside the performOperations() method
                     case SEARCH_LISTINGS_BY_DATE_RANGE:
                         // Prompt user for input for searchListingsByDateRange operation
-                        System.out.println("Enter latitude for search:");
-                        double searchLatByDate = scanner.nextDouble();
-                        System.out.println("Enter longitude for search:");
-                        double searchLongByDate = scanner.nextDouble();
-                        scanner.nextLine(); // Consume the newline character
                         System.out.println("Enter start date (yyyy-mm-dd) for search:");
                         String startDateByDate = scanner.nextLine();
                         System.out.println("Enter end date (yyyy-mm-dd) for search:");
@@ -298,9 +293,8 @@ public class Service {
                         boolean sortByPriceAscendingByDate = scanner.nextBoolean();
                         scanner.nextLine(); // Consume the newline character
 
-                        List<Listing> listingsByDateRange = Queries.searchListingsByDateRange(database.getConnection(),
-                                searchLatByDate,
-                                searchLongByDate, startDateByDate, endDateByDate, sortByPriceAscendingByDate);
+                        List<Display> listingsByDateRange = Queries.searchListingsByDateRange(database.getConnection(),
+                                startDateByDate, endDateByDate, sortByPriceAscendingByDate);
                         System.out.println("Listings available for booking between " + startDateByDate + " and "
                                 + endDateByDate + ":");
                         displayListings(listingsByDateRange);
@@ -342,7 +336,7 @@ public class Service {
                             }
                         }
 
-                        List<Listing> listingsWithFilters = Queries.searchListingsWithFilters(database.getConnection(),
+                        List<Display> listingsWithFilters = Queries.searchListingsWithFilters(database.getConnection(),
                                 searchLatWithFilters, searchLongWithFilters, searchPostalCodeWithFilters, amenityIds,
                                 startDateWithFilters,
                                 endDateWithFilters, minPriceWithFilters, maxPriceWithFilters,
@@ -366,7 +360,7 @@ public class Service {
         }
 
         // When the user chooses to quit, call the dropDatabase() function
-        database.dropTables();
+        database.dropDatabase();
         scanner.close();
     }
 
@@ -392,22 +386,10 @@ public class Service {
         System.out.println("Enter the name of the operation you want to perform(separated by _):");
     }
 
-    private void displayListings(List<Listing> listings) {
-        for (Listing listing : listings) {
-            displayListing(listing);
+    private void displayListings(List<Display> listings) {
+        for (Display listing : listings) {
+            listing.displayDetails();
         }
     }
 
-    private void displayListing(Listing listing) {
-        System.out.println("Listing ID (LID): " + listing.getLID());
-        System.out.println("Type: " + listing.getType());
-        System.out.println("Longitude: " + listing.getLongitude());
-        System.out.println("Latitude: " + listing.getLatitude());
-        System.out.println("Address: " + listing.getAddress());
-        System.out.println("Postal Code: " + listing.getPostalCode());
-        System.out.println("City: " + listing.getCity());
-        System.out.println("Country: " + listing.getCountry());
-        System.out.println("Host UID: " + listing.getHostUID());
-        System.out.println("-------------------------");
-    }
 }

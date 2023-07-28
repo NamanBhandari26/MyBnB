@@ -40,6 +40,21 @@ public class Listing {
     this.HostUID = HostUID;
   }
 
+  // Constructor with database connection
+  public Listing(Connection connection, int LID, String Type, double Longitude, double Latitude,
+      String Address, String PostalCode, String City, String Country, int HostUID) {
+    this.LID = LID;
+    this.connection = connection;
+    this.Type = Type;
+    this.Longitude = Longitude;
+    this.Latitude = Latitude;
+    this.Address = Address;
+    this.PostalCode = PostalCode;
+    this.City = City;
+    this.Country = Country;
+    this.HostUID = HostUID;
+  }
+
   // Static method to create (Insert) operation
   public static int insert(Connection connection, String Type, double Longitude, double Latitude,
       String Address, String PostalCode, String City, String Country, int HostUID) {
