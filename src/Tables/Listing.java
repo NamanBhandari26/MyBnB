@@ -6,7 +6,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
+import java.util.concurrent.TimeUnit;
 
 public class Listing {
   // Database connection attribute
@@ -127,11 +130,40 @@ public class Listing {
     }
   }
 
-  // Delete operation
   public void delete() {
-    try (PreparedStatement statement = connection.prepareStatement("DELETE FROM Listing WHERE LID = ?")) {
-      statement.setInt(1, this.LID);
-      statement.executeUpdate();
+    try {
+      // Delete records from dependent tables first
+
+      // 1. Delete from Rented table
+      try (PreparedStatement rentedStatement = connection.prepareStatement("DELETE FROM Rented WHERE LID = ?")) {
+        rentedStatement.setInt(1, this.LID);
+        rentedStatement.executeUpdate();
+      }
+
+      // 2. Delete from ListingReview table
+      try (PreparedStatement reviewStatement = connection.prepareStatement("DELETE FROM ListingReview WHERE LID = ?")) {
+        reviewStatement.setInt(1, this.LID);
+        reviewStatement.executeUpdate();
+      }
+
+      // 3. Delete from Has table
+      try (PreparedStatement hasStatement = connection.prepareStatement("DELETE FROM Has WHERE LID = ?")) {
+        hasStatement.setInt(1, this.LID);
+        hasStatement.executeUpdate();
+      }
+
+      // 4. Delete from Availability table
+      try (PreparedStatement availabilityStatement = connection
+          .prepareStatement("DELETE FROM Availability WHERE LID = ?")) {
+        availabilityStatement.setInt(1, this.LID);
+        availabilityStatement.executeUpdate();
+      }
+
+      // After deleting dependent records, delete the record from the Listing table
+      try (PreparedStatement listingStatement = connection.prepareStatement("DELETE FROM Listing WHERE LID = ?")) {
+        listingStatement.setInt(1, this.LID);
+        listingStatement.executeUpdate();
+      }
     } catch (SQLException e) {
       e.printStackTrace();
     }
@@ -253,7 +285,7 @@ public class Listing {
       try (ResultSet resultSet = statement.executeQuery()) {
         if (resultSet.next()) {
           int count = resultSet.getInt(1);
-          return count > 0;
+          return count == getNumberOfDaysInclusive(startDate, endDate);
         }
       }
     } catch (SQLException e) {
@@ -262,30 +294,76 @@ public class Listing {
     return false;
   }
 
-  // Function to set the price of the listing for a specific date range
+  private int getNumberOfDaysInclusive(String startDate, String endDate) {
+    // Convert string dates to java.util.Date objects
+    java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
+    java.util.Date start = null;
+    java.util.Date end = null;
+    try {
+      start = sdf.parse(startDate);
+      end = sdf.parse(endDate);
+    } catch (java.text.ParseException e) {
+      e.printStackTrace();
+      return 0;
+    }
+
+    // Calculate the number of days between start and end date inclusively
+    long diff = end.getTime() - start.getTime();
+    return (int) (TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS) + 1);
+  }
+
+  // Function to set the price for a specific date range
   public void setPrice(Connection connection, String startDate, String endDate, double newPrice) {
-    try (PreparedStatement statement = connection.prepareStatement(
-        "UPDATE Availability SET Price = ? WHERE LID = ? AND Date BETWEEN ? AND ? AND isAvailable = true")) {
-      statement.setDouble(1, newPrice);
-      statement.setInt(2, this.LID);
-      statement.setString(3, startDate);
-      statement.setString(4, endDate);
-      statement.executeUpdate();
-    } catch (SQLException e) {
+    try {
+      // Convert the string dates to LocalDate objects for easier date manipulation
+      LocalDate start = LocalDate.parse(startDate);
+      LocalDate end = LocalDate.parse(endDate);
+
+      // Loop through each day inclusively between the start and end date
+      LocalDate currentDay = start;
+      while (!currentDay.isAfter(end)) {
+        try (PreparedStatement statement = connection.prepareStatement(
+            "UPDATE Availability SET Price = ? WHERE LID = ? AND Date = ? AND isAvailable = true")) {
+          statement.setDouble(1, newPrice);
+          statement.setInt(2, this.LID);
+          statement.setString(3, currentDay.toString());
+          statement.executeUpdate();
+        } catch (SQLException e) {
+          e.printStackTrace();
+        }
+        // Move to the next day
+        currentDay = currentDay.plus(1, ChronoUnit.DAYS);
+      }
+    } catch (java.time.format.DateTimeParseException e) {
       e.printStackTrace();
     }
   }
 
   // Function to update the availability of the listing for a specific date range
-  public void updateAvailability(Connection connection, String startDate, String endDate, boolean isAvailable) {
-    try (PreparedStatement statement = connection.prepareStatement(
-        "UPDATE Availability SET isAvailable = ? WHERE LID = ? AND Date BETWEEN ? AND ?")) {
-      statement.setBoolean(1, isAvailable);
-      statement.setInt(2, this.LID);
-      statement.setString(3, startDate);
-      statement.setString(4, endDate);
-      statement.executeUpdate();
-    } catch (SQLException e) {
+  public void updateAvailability(Connection connection, String startDate, String endDate,
+      boolean isAvailable) {
+    try {
+      // Convert the string dates to LocalDate objects for easier date manipulation
+      LocalDate start = LocalDate.parse(startDate);
+      LocalDate end = LocalDate.parse(endDate);
+
+      // Loop through each day inclusively between the start and end date
+      LocalDate currentDay = start;
+      while (!currentDay.isAfter(end)) {
+        try (PreparedStatement statement = connection.prepareStatement(
+            "UPDATE Availability SET isAvailable = ? WHERE LID = ? AND Date = ?")) {
+          statement.setBoolean(1, isAvailable);
+          statement.setInt(2, this.LID);
+          statement.setString(3, currentDay.toString());
+          statement.executeUpdate();
+        } catch (SQLException e) {
+          e.printStackTrace();
+        }
+
+        // Move to the next day
+        currentDay = currentDay.plus(1, ChronoUnit.DAYS);
+      }
+    } catch (java.time.format.DateTimeParseException e) {
       e.printStackTrace();
     }
   }

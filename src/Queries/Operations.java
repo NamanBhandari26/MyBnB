@@ -142,7 +142,7 @@ public class Operations {
 	public static void insertRenterComment(Connection connection, int HostUID, int RenterUID, int rating,
 			String comment) {
 		// Check if the renter has completed a stay recently
-		if (!Rented.hasRecentStay(connection, RenterUID)) {
+		if (!Rented.hasRecentStay(connection, HostUID, RenterUID)) {
 			throw new IllegalStateException("The renter has not completed a stay recently. Cannot comment and rate.");
 		}
 
@@ -150,14 +150,14 @@ public class Operations {
 	}
 
 	// Insert Comments for Host
-	public static void insertHostComment(Connection connection, int HostUID, int RenterUID, int rating,
+	public static void insertHostComment(Connection connection, int RenterUID, int LID, int rating,
 			String comment) {
 		// Check if the host has rented the listing recently
-		if (!Rented.hasRecentBooking(connection, HostUID, RenterUID)) {
+		if (!Rented.hasRecentBooking(connection, RenterUID, LID)) {
 			throw new IllegalStateException("The host has not rented the listing recently. Cannot comment and rate.");
 		}
 
-		ListingReview.insert(connection, HostUID, RenterUID, rating, comment);
+		ListingReview.insert(connection, RenterUID, LID, rating, comment);
 	}
 
 }

@@ -106,11 +106,45 @@ public class User {
     }
   }
 
-  // Delete operation
   public void delete() {
-    try (PreparedStatement statement = connection.prepareStatement("DELETE FROM User WHERE UID = ?")) {
-      statement.setInt(1, this.UID);
-      statement.executeUpdate();
+    try {
+      // Delete records from dependent tables first
+
+      // 1. Delete from Rented table where the User is the renter or host
+      try (PreparedStatement rentedStatement = connection.prepareStatement(
+          "DELETE FROM Rented WHERE UID = ? OR LID IN (SELECT LID FROM Listing WHERE HostUID = ?)")) {
+        rentedStatement.setInt(1, this.UID);
+        rentedStatement.setInt(2, this.UID);
+        rentedStatement.executeUpdate();
+      }
+
+      // 2. Delete from ListingReview table where the User is the reviewer
+      try (PreparedStatement reviewStatement = connection.prepareStatement(
+          "DELETE FROM ListingReview WHERE UID = ?")) {
+        reviewStatement.setInt(1, this.UID);
+        reviewStatement.executeUpdate();
+      }
+
+      // 3. Delete from RenterReview table where the User is the renter or host
+      try (PreparedStatement renterReviewStatement = connection.prepareStatement(
+          "DELETE FROM RenterReview WHERE RenterUID = ? OR HostUID = ?")) {
+        renterReviewStatement.setInt(1, this.UID);
+        renterReviewStatement.setInt(2, this.UID);
+        renterReviewStatement.executeUpdate();
+      }
+
+      // 4. Delete from Listing table where the User is the host
+      try (PreparedStatement listingStatement = connection.prepareStatement(
+          "DELETE FROM Listing WHERE HostUID = ?")) {
+        listingStatement.setInt(1, this.UID);
+        listingStatement.executeUpdate();
+      }
+
+      // After deleting dependent records, delete the record from the User table
+      try (PreparedStatement userStatement = connection.prepareStatement("DELETE FROM User WHERE UID = ?")) {
+        userStatement.setInt(1, this.UID);
+        userStatement.executeUpdate();
+      }
     } catch (SQLException e) {
       e.printStackTrace();
     }

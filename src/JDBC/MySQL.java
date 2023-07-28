@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-import JDBC.SQL;
 import Tables.Amenities;
 import Tables.Availability;
 import Tables.Has;
@@ -131,23 +130,23 @@ public class MySQL implements SQL {
     Has.insert(connection, lid3, 13);
     Has.insert(connection, lid3, 14);
 
-    Availability.insert(connection, lid1, "2020-04-07", 55);
-    Availability.insert(connection, lid1, "2020-04-08", 55);
-    Availability.insert(connection, lid1, "2020-04-09", 55);
-    Availability.insert(connection, lid1, "2020-04-10", 55);
-    Availability.insert(connection, lid1, "2020-04-11", 55);
+    Availability.insert(connection, lid1, "2020-04-07", 55, true);
+    Availability.insert(connection, lid1, "2020-04-08", 55, true);
+    Availability.insert(connection, lid1, "2020-04-09", 55, true);
+    Availability.insert(connection, lid1, "2020-04-10", 55, true);
+    Availability.insert(connection, lid1, "2020-04-11", 55, true);
 
-    Availability.insert(connection, lid2, "2020-04-07", 65);
-    Availability.insert(connection, lid2, "2020-04-08", 65);
-    Availability.insert(connection, lid2, "2020-04-09", 65);
-    Availability.insert(connection, lid2, "2020-04-10", 65);
-    Availability.insert(connection, lid2, "2020-04-11", 65);
+    Availability.insert(connection, lid2, "2020-04-07", 65, true);
+    Availability.insert(connection, lid2, "2020-04-08", 65, true);
+    Availability.insert(connection, lid2, "2020-04-09", 65, true);
+    Availability.insert(connection, lid2, "2020-04-10", 65, true);
+    Availability.insert(connection, lid2, "2020-04-11", 65, true);
 
-    Availability.insert(connection, lid3, "2020-04-07", 75);
-    Availability.insert(connection, lid3, "2020-04-08", 75);
-    Availability.insert(connection, lid3, "2020-04-09", 75);
-    Availability.insert(connection, lid3, "2020-04-10", 95);
-    Availability.insert(connection, lid3, "2020-04-11", 99);
+    Availability.insert(connection, lid3, "2020-04-07", 75, true);
+    Availability.insert(connection, lid3, "2020-04-08", 75, true);
+    Availability.insert(connection, lid3, "2020-04-09", 75, true);
+    Availability.insert(connection, lid3, "2020-04-10", 95, true);
+    Availability.insert(connection, lid3, "2020-04-11", 99, true);
   }
 
   public Connection getConnection() {

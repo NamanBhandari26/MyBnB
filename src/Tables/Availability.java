@@ -14,22 +14,25 @@ public class Availability {
     private int LID;
     private String Date;
     private double Price;
+    private boolean isAvailable; // New field for availability status
 
     // Constructor with database connection
-    public Availability(Connection connection, int LID, String Date, double Price) {
+    public Availability(Connection connection, int LID, String Date, double Price, boolean isAvailable) {
         this.connection = connection;
         this.LID = LID;
         this.Date = Date;
         this.Price = Price;
+        this.isAvailable = isAvailable;
     }
 
     // Static method to create (Insert) operation
-    public static void insert(Connection connection, int LID, String Date, double Price) {
-        try (PreparedStatement statement = connection
-                .prepareStatement("INSERT INTO Availability (LID, Date, Price) VALUES (?, ?, ?)")) {
+    public static void insert(Connection connection, int LID, String Date, double Price, boolean isAvailable) {
+        try (PreparedStatement statement = connection.prepareStatement(
+                "INSERT INTO Availability (LID, Date, Price, isAvailable) VALUES (?, ?, ?, ?)")) {
             statement.setInt(1, LID);
             statement.setString(2, Date);
             statement.setDouble(3, Price);
+            statement.setBoolean(4, isAvailable);
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -46,7 +49,8 @@ public class Availability {
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
                     double Price = resultSet.getDouble("Price");
-                    availability = new Availability(connection, LID, Date, Price);
+                    boolean isAvailable = resultSet.getBoolean("isAvailable");
+                    availability = new Availability(connection, LID, Date, Price, isAvailable);
                 }
             }
         } catch (SQLException e) {
@@ -57,11 +61,12 @@ public class Availability {
 
     // Update operation
     public void update() {
-        try (PreparedStatement statement = connection
-                .prepareStatement("UPDATE Availability SET Price = ? WHERE LID = ? AND Date = ?")) {
+        try (PreparedStatement statement = connection.prepareStatement(
+                "UPDATE Availability SET Price = ?, isAvailable = ? WHERE LID = ? AND Date = ?")) {
             statement.setDouble(1, this.Price);
-            statement.setInt(2, this.LID);
-            statement.setString(3, this.Date);
+            statement.setBoolean(2, this.isAvailable);
+            statement.setInt(3, this.LID);
+            statement.setString(4, this.Date);
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -87,6 +92,7 @@ public class Availability {
                     "LID INT NOT NULL," +
                     "Date DATE NOT NULL," +
                     "Price DOUBLE NOT NULL," +
+                    "isAvailable BOOLEAN NOT NULL," + // New field in the table
                     "PRIMARY KEY (LID, Date)," +
                     "FOREIGN KEY (LID) REFERENCES Listing(LID))"; // "Listing" should be replaced with the
             // actual table name of the Listing table
@@ -129,5 +135,13 @@ public class Availability {
 
     public void setPrice(double Price) {
         this.Price = Price;
+    }
+
+    public boolean isAvailable() {
+        return isAvailable;
+    }
+
+    public void setAvailable(boolean available) {
+        isAvailable = available;
     }
 }

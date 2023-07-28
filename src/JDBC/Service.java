@@ -220,18 +220,18 @@ public class Service {
 
                     case INSERT_HOST_COMMENT:
                         // Prompt user for input for insertHostComment operation
-                        System.out.println("Enter host ID (UID) for host comment:");
-                        int hostUidForHostComment = scanner.nextInt();
                         System.out.println("Enter renter ID (UID) for host comment:");
                         int renterUidForHostComment = scanner.nextInt();
+                        System.out.println("Enter Listing ID (LID) for host comment:");
+                        int listingLidForHostComment = scanner.nextInt();
                         System.out.println("Enter rating (1-5) for host comment:");
                         int hostRating = scanner.nextInt();
                         scanner.nextLine(); // Consume the newline character
                         System.out.println("Enter comment for host:");
                         String hostComment = scanner.nextLine();
 
-                        Operations.insertHostComment(database.getConnection(), hostUidForHostComment,
-                                renterUidForHostComment, hostRating, hostComment);
+                        Operations.insertHostComment(database.getConnection(), renterUidForHostComment,
+                                listingLidForHostComment, hostRating, hostComment);
                         System.out.println("Host comment inserted.");
                         break;
 
@@ -389,7 +389,7 @@ public class Service {
         System.out.println("15. Search Listings with Filters");
         System.out.println("16. Quit");
         System.out.println("=========================");
-        System.out.println("Enter the number corresponding to the operation you want to perform:");
+        System.out.println("Enter the name of the operation you want to perform(separated by _):");
     }
 
     private void displayListings(List<Listing> listings) {
