@@ -111,7 +111,7 @@ public class ListingReview {
           "UID INT NOT NULL," +
           "LID INT NOT NULL," +
           "rating INT NOT NULL," +
-          "comment VARCHAR(255)," +
+          "comment TEXT," +
           "PRIMARY KEY (UID, LID)," +
           "FOREIGN KEY (UID) REFERENCES User(UID)," +
           "FOREIGN KEY (LID) REFERENCES Listing(LID))"; // "User" and "Listing" should be replaced

@@ -8,7 +8,9 @@ import java.util.Scanner;
 
 import Queries.Operations;
 import Queries.Display;
+import Queries.HostToolKit;
 import Queries.Queries;
+import Queries.Report;
 
 public class Service {
     public MySQL database;
@@ -31,6 +33,21 @@ public class Service {
         SEARCH_LISTING_BY_ADDRESS,
         SEARCH_LISTINGS_BY_DATE_RANGE,
         SEARCH_LISTINGS_WITH_FILTERS,
+        REPORT_TOTAL_BOOKING_BY_DATE_AND_CITY,
+        REPORT_TOTAL_BOOKING_BY_DATE_AND_POSTAL,
+        REPORT_TOTAL_LISTING_BY_COUNTRY,
+        REPORT_TOTAL_LISTING_BY_COUNTRY_AND_CITY,
+        REPORT_TOTAL_LISTING_BY_POSTAL,
+        REPORT_RANK_HOSTS_PER_COUNTRY,
+        REPORT_RANK_HOSTS_PER_COUNTRY_AND_CITY,
+        REPORT_COMMERCIAL_HOSTS,
+        REPORT_RANK_RENTER_BETWEEN_DATE,
+        REPORT_RANK_RENTER_BETWEEN_DATE_AND_CITY,
+        REPORT_MOST_HOST_CANCELS,
+        REPORT_MOST_RENTER_CANCELS,
+        REPORT_GET_NOUN_PRASES_FOR_LISTING,
+        HOST_TOOL_KIT_SUGGESTED_PRICE,
+        HOST_TOOL_KIT_SUGGESTED_AMENITIES,
         QUIT
     }
 
@@ -46,9 +63,10 @@ public class Service {
     }
 
     public void startServices() throws SQLException {
-        database.createTables();
+        // database.createTables();
         System.out.println("Starting Services...");
-        database.addData();
+        // database.addData();
+        // database.test();
         performOperations();
     }
 
@@ -344,7 +362,52 @@ public class Service {
                         System.out.println("Listings with applied filters:");
                         displayListings(listingsWithFilters);
                         break;
-
+                    
+                    case REPORT_TOTAL_BOOKING_BY_DATE_AND_CITY:
+                        Report.totalBookingByDateAndCity(database.getConnection(), scanner);
+                        break;
+                    case REPORT_TOTAL_BOOKING_BY_DATE_AND_POSTAL:
+                        Report.totalBookingByDateAndPostal(database.getConnection(), scanner);
+                        break;
+                    case REPORT_TOTAL_LISTING_BY_COUNTRY:
+                        Report.totalListingByCountry(database.getConnection(), scanner);
+                        break;
+                    case REPORT_TOTAL_LISTING_BY_COUNTRY_AND_CITY:
+                        Report.totalListingByCountryAndCity(database.getConnection(), scanner);
+                        break;
+                    case REPORT_TOTAL_LISTING_BY_POSTAL:
+                        Report.totalListingByPostal(database.getConnection(), scanner);
+                        break;
+                    case REPORT_RANK_HOSTS_PER_COUNTRY:
+                        Report.rankHostsPerCountry(database.getConnection(), scanner);
+                        break;
+                    case REPORT_RANK_HOSTS_PER_COUNTRY_AND_CITY:
+                        Report.rankHostsPerCountryAndCity(database.getConnection(), scanner);
+                        break;
+                    case REPORT_COMMERCIAL_HOSTS:
+                        Report.commercialHosts(database.getConnection(), scanner);
+                        break;
+                    case REPORT_RANK_RENTER_BETWEEN_DATE:
+                        Report.rankRenterBetweenDate(database.getConnection(), scanner);
+                        break;
+                    case REPORT_RANK_RENTER_BETWEEN_DATE_AND_CITY:
+                        Report.rankRenterBetweenDateAndCity(database.getConnection(), scanner);
+                        break;
+                    case REPORT_MOST_HOST_CANCELS:
+                        Report.mostHostCancels(database.getConnection());
+                        break;
+                    case REPORT_MOST_RENTER_CANCELS:
+                        Report.mostRenterCancels(database.getConnection());
+                        break;
+                    case REPORT_GET_NOUN_PRASES_FOR_LISTING:
+                        Report.getNounPrasesForlisting(database.getConnection());
+                        break;
+                    case HOST_TOOL_KIT_SUGGESTED_PRICE:
+                        HostToolKit.suggestedPrice(database.getConnection(), scanner);
+                        break;
+                    case HOST_TOOL_KIT_SUGGESTED_AMENITIES:
+                        HostToolKit.suggestedAmenities(database.getConnection(), scanner);
+                        break;
                     case QUIT:
                         quit = true;
                         break;
@@ -381,7 +444,22 @@ public class Service {
         System.out.println("13. Search Listing by Address");
         System.out.println("14. Search Listings by Date Range");
         System.out.println("15. Search Listings with Filters");
-        System.out.println("16. Quit");
+        System.out.println("16. Report Total Booking by Date and City");
+        System.out.println("17. Report Total Booking by Date and Postal");
+        System.out.println("18. Report Total Listing by Country");
+        System.out.println("19. Report Total Listing by Country and City");
+        System.out.println("20. Report Total Listing by Postal");
+        System.out.println("21. Report Rank Hosts Per Country");
+        System.out.println("22. Report Rank Hosts Per Country and City");
+        System.out.println("23. Report Commercial Hosts");
+        System.out.println("24. Report Rank Renter Between Date");
+        System.out.println("25. Report Rank Renter Between Date and City");
+        System.out.println("26. Report Most Host Cancels");
+        System.out.println("27. Report Most Renter Cancels");
+        System.out.println("28. Report Get Noun Prases for Listing");
+        System.out.println("29. Host Tool Kit Suggested Price");
+        System.out.println("30. Host Tool Kit Suggested Amenities");
+        System.out.println("31. Quit");
         System.out.println("=========================");
         System.out.println("Enter the name of the operation you want to perform(separated by _):");
     }
