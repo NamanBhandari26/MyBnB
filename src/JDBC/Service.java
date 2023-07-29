@@ -18,6 +18,10 @@ public class Service {
 
     // Enum for user input options
     private enum UserOption {
+    	CREATE_TABLES,
+    	DROP_TABLES,
+    	DROP_DATABASE,
+    	ADD_DATA,
         CREATE_USER_PROFILE,
         DELETE_USER_PROFILE,
         BOOK_LISTING,
@@ -63,10 +67,7 @@ public class Service {
     }
 
     public void startServices() throws SQLException {
-        // database.createTables();
         System.out.println("Starting Services...");
-        // database.addData();
-        // database.test();
         performOperations();
     }
 
@@ -80,6 +81,40 @@ public class Service {
                 UserOption userOption = UserOption.valueOf(userInput.toUpperCase());
 
                 switch (userOption) {
+                    case CREATE_TABLES:
+                        System.out.println("Are you sure you want to create tables? (y/n):");
+                        String confirmCreateTables = scanner.nextLine().trim().toLowerCase();
+                        if (confirmCreateTables.equals("y")) {
+                            database.createTables();
+                            System.out.println("Operation completed.");
+                        } else {
+                            System.out.println("Operation canceled.");
+                        }
+                        break;
+                    case DROP_TABLES:
+                        System.out.println("Are you sure you want to drop tables? (y/n):");
+                        String confirmDropTables = scanner.nextLine().trim().toLowerCase();
+                        if (confirmDropTables.equals("y")) {
+                            database.dropTables();
+                            System.out.println("Operation completed.");
+                        } else {
+                            System.out.println("Operation canceled.");
+                        }
+                        break;
+                    case DROP_DATABASE:
+                        System.out.println("Are you sure you want to drop the database? (y/n):");
+                        String confirmDropDatabase = scanner.nextLine().trim().toLowerCase();
+                        if (confirmDropDatabase.equals("y")) {
+                            database.dropDatabase();
+                            System.out.println("Operation completed.");
+                        } else {
+                            System.out.println("Operation canceled.");
+                        }
+                        break;
+                    case ADD_DATA:
+                    	database.addData();
+                    	System.out.println("Data Added...");
+                    	break;
                     case CREATE_USER_PROFILE:
                         // Prompt user for input for createUser operation
                         System.out.println("Enter user name:");
@@ -411,7 +446,6 @@ public class Service {
                     case QUIT:
                         quit = true;
                         break;
-
                     default:
                         System.out.println("Invalid input. Please try again.");
                         break;
@@ -421,48 +455,52 @@ public class Service {
                 scanner.nextLine(); // Consume the invalid input
             }
         }
-
-        // When the user chooses to quit, call the dropDatabase() function
-        database.dropDatabase();
+        System.out.println("Service Ended.....");
+        System.out.println("Thank you!");
         scanner.close();
     }
 
     private void printMenu() {
         System.out.println("========= Menu =========");
-        System.out.println("1. Create User Profile");
-        System.out.println("2. Delete User Profile");
-        System.out.println("3. Book Listing");
-        System.out.println("4. Remove Listing");
-        System.out.println("5. Cancel Booking");
-        System.out.println("6. Create Listing");
-        System.out.println("7. Update Listing Price");
-        System.out.println("8. Update Listing Availability");
-        System.out.println("9. Insert Renter Comment");
-        System.out.println("10. Insert Host Comment");
-        System.out.println("11. Search Listings by Location");
-        System.out.println("12. Search Listings by Postal Code");
-        System.out.println("13. Search Listing by Address");
-        System.out.println("14. Search Listings by Date Range");
-        System.out.println("15. Search Listings with Filters");
-        System.out.println("16. Report Total Booking by Date and City");
-        System.out.println("17. Report Total Booking by Date and Postal");
-        System.out.println("18. Report Total Listing by Country");
-        System.out.println("19. Report Total Listing by Country and City");
-        System.out.println("20. Report Total Listing by Postal");
-        System.out.println("21. Report Rank Hosts Per Country");
-        System.out.println("22. Report Rank Hosts Per Country and City");
-        System.out.println("23. Report Commercial Hosts");
-        System.out.println("24. Report Rank Renter Between Date");
-        System.out.println("25. Report Rank Renter Between Date and City");
-        System.out.println("26. Report Most Host Cancels");
-        System.out.println("27. Report Most Renter Cancels");
-        System.out.println("28. Report Get Noun Prases for Listing");
-        System.out.println("29. Host Tool Kit Suggested Price");
-        System.out.println("30. Host Tool Kit Suggested Amenities");
-        System.out.println("31. Quit");
+        System.out.println("1. Create Tables");
+        System.out.println("2. Drop Tables");
+        System.out.println("3. Drop Database");
+        System.out.println("4. Add Data");
+        System.out.println("5. Create User Profile");
+        System.out.println("6. Delete User Profile");
+        System.out.println("7. Book Listing");
+        System.out.println("8. Remove Listing");
+        System.out.println("9. Cancel Booking");
+        System.out.println("10. Create Listing");
+        System.out.println("11. Update Listing Price");
+        System.out.println("12. Update Listing Availability");
+        System.out.println("13. Insert Renter Comment");
+        System.out.println("14. Insert Host Comment");
+        System.out.println("15. Search Listings by Location");
+        System.out.println("16. Search Listings by Postal Code");
+        System.out.println("17. Search Listing by Address");
+        System.out.println("18. Search Listings by Date Range");
+        System.out.println("19. Search Listings with Filters");
+        System.out.println("20. Report Total Booking by Date and City");
+        System.out.println("21. Report Total Booking by Date and Postal");
+        System.out.println("22. Report Total Listing by Country");
+        System.out.println("23. Report Total Listing by Country and City");
+        System.out.println("24. Report Total Listing by Postal");
+        System.out.println("25. Report Rank Hosts Per Country");
+        System.out.println("26. Report Rank Hosts Per Country and City");
+        System.out.println("27. Report Commercial Hosts");
+        System.out.println("28. Report Rank Renter Between Date");
+        System.out.println("29. Report Rank Renter Between Date and City");
+        System.out.println("30. Report Most Host Cancels");
+        System.out.println("31. Report Most Renter Cancels");
+        System.out.println("32. Report Get Noun Prases for Listing");
+        System.out.println("33. Host Tool Kit Suggested Price");
+        System.out.println("34. Host Tool Kit Suggested Amenities");
+        System.out.println("35. Quit");
         System.out.println("=========================");
-        System.out.println("Enter the name of the operation you want to perform(separated by _):");
+        System.out.println("Enter the name of the operation you want to perform (Use _ instead of space):");
     }
+
 
     private void displayListings(List<Display> listings) {
         for (Display listing : listings) {

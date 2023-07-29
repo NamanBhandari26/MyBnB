@@ -41,16 +41,22 @@ public class MySQL implements SQL {
     Availability.createTable(connection);
   }
 
-  public void dropTables() throws SQLException {
-    User.dropTable(connection);
-    Amenities.dropTable(connection);
-    Listing.dropTable(connection);
-    Rented.dropTable(connection);
-    ListingReview.dropTable(connection);
-    RenterReview.dropTable(connection);
-    Has.dropTable(connection);
-    Availability.dropTable(connection);
-  }
+	//Function to drop the tables
+	public void dropTables() {
+	   try (Statement statement = connection.createStatement()) {
+	       statement.executeUpdate("DROP TABLE IF EXISTS Availability;");
+	       statement.executeUpdate("DROP TABLE IF EXISTS Has;");
+	       statement.executeUpdate("DROP TABLE IF EXISTS RenterReview;");
+	       statement.executeUpdate("DROP TABLE IF EXISTS ListingReview;");
+	       statement.executeUpdate("DROP TABLE IF EXISTS Rented;");
+	       statement.executeUpdate("DROP TABLE IF EXISTS Amenities;");
+	       statement.executeUpdate("DROP TABLE IF EXISTS Listing;");
+	       statement.executeUpdate("DROP TABLE IF EXISTS User;");
+	   } catch (SQLException e) {
+	       e.printStackTrace();
+	   }
+	}
+
 
   // Function to drop the database
   public void dropDatabase() {
@@ -60,6 +66,7 @@ public class MySQL implements SQL {
       e.printStackTrace();
     }
   }
+  
 
   public void addData() throws SQLException {
     int uid1 = User.insert(connection, "Bob Smith", "1 fake st.", "1998-06-15", "Retail Operations",

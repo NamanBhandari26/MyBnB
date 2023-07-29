@@ -6,15 +6,35 @@ import java.util.List;
 
 public class Queries {
 
-    // Helper method to create a PreparedStatement
+    // Helper method to create a PreparedStatement  
     private static PreparedStatement prepareStatement(Connection connection, String query, Object... params)
             throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement(query);
-        for (int i = 0; i < params.length; i++) {
+
+        int numParams = params.length;
+        int numPlaceholders = countPlaceholders(query);
+
+        if (numParams != numPlaceholders) {
+            throw new IllegalArgumentException("Number of parameters does not match number of placeholders in the query.");
+        }
+
+        for (int i = 0; i < numParams; i++) {
             preparedStatement.setObject(i + 1, params[i]);
         }
         return preparedStatement;
     }
+
+    // Helper method to count the number of placeholders (?) in the SQL query
+    private static int countPlaceholders(String query) {
+        int count = 0;
+        int index = query.indexOf('?');
+        while (index != -1) {
+            count++;
+            index = query.indexOf('?', index + 1);
+        }
+        return count;
+    }
+
 
     // Helper method to execute a query and return a list of listings
     private static List<Display> executeListingQuery(Connection connection, String query, Object... params) {
@@ -123,12 +143,6 @@ public class Queries {
     public static List<Display> searchListingsWithFilters(Connection connection, double latitude, double longitude,
             String postalCode, List<Integer> amenityIds, String startDate, String endDate, double minPrice,
             double maxPrice, boolean sortByPriceAscending) {
-        // Implement the query to return listings based on multiple filters:
-        // postalCode: Listings in the same and adjacent postal codes
-        // amenityIds: Listings with specified amenities
-        // startDate and endDate: Listings available for booking in the specified date
-        // range
-        // minPrice and maxPrice: Listings with prices within the specified range
         String sortBy = sortByPriceAscending ? "A.Price ASC" : "Distance ASC";
         StringBuilder queryBuilder = new StringBuilder(
                 "SELECT DISTINCT L.LID, L.Type, L.Longitude, L.Latitude, L.Address, L.PostalCode, L.City, L.Country, L.HostUID, "
@@ -139,9 +153,9 @@ public class Queries {
                         "JOIN Has H ON L.LID = H.LID " +
                         "LEFT JOIN Availability A ON L.LID = A.LID " +
                         "WHERE (L.PostalCode LIKE ? OR L.PostalCode LIKE ? OR L.PostalCode LIKE ?) " +
-                        "AND (? IS NULL OR A.Date IS NULL OR (A.Date >= ? AND A.Date <= ?)) " +
+                        "AND (? IS NULL OR ? IS NULL OR A.Date IS NULL OR (A.Date >= ? AND A.Date <= ?)) " + // Changed ? IS NULL to A.Price IS NOT NULL
                         "AND (L.Type IS NULL OR L.Type IN (SELECT Type FROM Listing WHERE Type = L.Type)) " +
-                        "AND (L.Price >= ? AND L.Price <= ?) ");
+                        "AND (A.Price >= ? AND A.Price <= ?) "); // Changed L.Price to A.Price
         if (amenityIds != null && !amenityIds.isEmpty()) { // Check if amenityIds is not null and not empty
             for (int i = 0; i < amenityIds.size(); i++) {
                 queryBuilder.append("AND H.AID = ? "); // Add a condition for each amenityId
@@ -168,5 +182,6 @@ public class Queries {
 
         return executeListingQuery(connection, query, params.toArray());
     }
+
 
 }
