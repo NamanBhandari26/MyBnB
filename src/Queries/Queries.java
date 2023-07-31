@@ -83,10 +83,18 @@ public class Queries {
 
     public static List<Display> searchListingsByPostalCode(Connection connection, String postalCode,
             boolean sortByPriceAscending) {
-        // Implement the query to return all listings in the same and adjacent postal
-        // codes
+        // Implement the query to return all listings with postal codes matching the first 3 letters of the input
         double originLatitude = 0.0;
         double originLongitude = 0.0;
+
+        // Validate that postalCode is not null and has at least 3 characters
+        if (postalCode == null || postalCode.length() == 7) {
+            throw new IllegalArgumentException("Invalid postal code format.");
+        }
+
+        // Extract the first three letters of the input postalCode
+        String firstThreeLetters = postalCode.substring(0, 3) + "%";
+
         String sortBy = sortByPriceAscending ? "A.Price ASC" : "Distance ASC";
         String query = "SELECT L.LID, L.Type, L.Longitude, L.Latitude, L.Address, L.PostalCode, L.City, L.Country, L.HostUID, "
                 +
@@ -94,10 +102,9 @@ public class Queries {
                 +
                 "FROM Listing AS L " +
                 "INNER JOIN Availability AS A ON L.LID = A.LID " +
-                "WHERE L.PostalCode LIKE ? OR L.PostalCode LIKE ? OR L.PostalCode LIKE ? " +
+                "WHERE L.PostalCode LIKE ? " +
                 "ORDER BY " + sortBy;
-        return executeListingQuery(connection, query, originLatitude, originLongitude, "%" + postalCode,
-                postalCode + " %", "% " + postalCode);
+        return executeListingQuery(connection, query, originLatitude, originLongitude, firstThreeLetters);
     }
 
     public static Display searchListingByAddress(Connection connection, String address) {
@@ -143,6 +150,15 @@ public class Queries {
     public static List<Display> searchListingsWithFilters(Connection connection, double latitude, double longitude,
             String postalCode, List<Integer> amenityIds, String startDate, String endDate, double minPrice,
             double maxPrice, boolean sortByPriceAscending) {
+    	
+        // Validate that postalCode is not null and has at least 3 characters
+        if (postalCode == null || postalCode.length() == 7) {
+            throw new IllegalArgumentException("Invalid postal code format.");
+        }
+
+        // Extract the first three letters of the input postalCode
+        String firstThreeLetters = postalCode.substring(0, 3) + "%";
+        
         String sortBy = sortByPriceAscending ? "A.Price ASC" : "Distance ASC";
         StringBuilder queryBuilder = new StringBuilder(
                 "SELECT DISTINCT L.LID, L.Type, L.Longitude, L.Latitude, L.Address, L.PostalCode, L.City, L.Country, L.HostUID, "
@@ -152,7 +168,7 @@ public class Queries {
                         "FROM Listing L " +
                         "JOIN Has H ON L.LID = H.LID " +
                         "LEFT JOIN Availability A ON L.LID = A.LID " +
-                        "WHERE (L.PostalCode LIKE ? OR L.PostalCode LIKE ? OR L.PostalCode LIKE ?) " +
+                        "WHERE (L.PostalCode LIKE ?) " +
                         "AND (? IS NULL OR ? IS NULL OR A.Date IS NULL OR (A.Date >= ? AND A.Date <= ?)) " + // Changed ? IS NULL to A.Price IS NOT NULL
                         "AND (L.Type IS NULL OR L.Type IN (SELECT Type FROM Listing WHERE Type = L.Type)) " +
                         "AND (A.Price >= ? AND A.Price <= ?) "); // Changed L.Price to A.Price
@@ -167,9 +183,7 @@ public class Queries {
         List<Object> params = new ArrayList<>();
         params.add(latitude);
         params.add(longitude);
-        params.add(postalCode);
-        params.add(postalCode + " %");
-        params.add("% " + postalCode);
+        params.add(firstThreeLetters);
         params.add(startDate);
         params.add(endDate);
         params.add(startDate);

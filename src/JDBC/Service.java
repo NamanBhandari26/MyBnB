@@ -18,42 +18,43 @@ public class Service {
 
     // Enum for user input options
     private enum UserOption {
-    	CREATE_TABLES,
-    	DROP_TABLES,
-    	DROP_DATABASE,
-    	ADD_DATA,
-        CREATE_USER_PROFILE,
-        DELETE_USER_PROFILE,
-        BOOK_LISTING,
-        REMOVE_LISTING,
-        CANCEL_BOOKING,
-        CREATE_LISTING,
-        UPDATE_LISTING_PRICE,
-        UPDATE_LISTING_AVAILABILITY,
-        INSERT_RENTER_COMMENT,
-        INSERT_HOST_COMMENT,
-        SEARCH_LISTINGS_BY_LOCATION,
-        SEARCH_LISTINGS_BY_POSTAL_CODE,
-        SEARCH_LISTING_BY_ADDRESS,
-        SEARCH_LISTINGS_BY_DATE_RANGE,
-        SEARCH_LISTINGS_WITH_FILTERS,
-        REPORT_TOTAL_BOOKING_BY_DATE_AND_CITY,
-        REPORT_TOTAL_BOOKING_BY_DATE_AND_POSTAL,
-        REPORT_TOTAL_LISTING_BY_COUNTRY,
-        REPORT_TOTAL_LISTING_BY_COUNTRY_AND_CITY,
-        REPORT_TOTAL_LISTING_BY_POSTAL,
-        REPORT_RANK_HOSTS_PER_COUNTRY,
-        REPORT_RANK_HOSTS_PER_COUNTRY_AND_CITY,
-        REPORT_COMMERCIAL_HOSTS,
-        REPORT_RANK_RENTER_BETWEEN_DATE,
-        REPORT_RANK_RENTER_BETWEEN_DATE_AND_CITY,
-        REPORT_MOST_HOST_CANCELS,
-        REPORT_MOST_RENTER_CANCELS,
-        REPORT_GET_NOUN_PRASES_FOR_LISTING,
-        HOST_TOOL_KIT_SUGGESTED_PRICE,
-        HOST_TOOL_KIT_SUGGESTED_AMENITIES,
+        _1_,
+        _2_,
+        _3_,
+        _4_,
+        _5_,
+        _6_,
+        _7_,
+        _8_,
+        _9_,
+        _10_,
+        _11_,
+        _12_,
+        _13_,
+        _14_,
+        _15_,
+        _16_,
+        _17_,
+        _18_,
+        _19_,
+        _20_,
+        _21_,
+        _22_,
+        _23_,
+        _24_,
+        _25_,
+        _26_,
+        _27_,
+        _28_,
+        _29_,
+        _30_,
+        _31_,
+        _32_,
+        _33_,
+        _34_,
         QUIT
     }
+
 
     public Service() throws SQLException, ClassNotFoundException {
         try {
@@ -78,10 +79,10 @@ public class Service {
             String userInput = scanner.nextLine();
 
             try {
-                UserOption userOption = UserOption.valueOf(userInput.toUpperCase());
+                UserOption userOption = UserOption.valueOf("_" + userInput + "_");
 
                 switch (userOption) {
-                    case CREATE_TABLES:
+                    case _1_:
                         System.out.println("Are you sure you want to create tables? (y/n):");
                         String confirmCreateTables = scanner.nextLine().trim().toLowerCase();
                         if (confirmCreateTables.equals("y")) {
@@ -91,7 +92,7 @@ public class Service {
                             System.out.println("Operation canceled.");
                         }
                         break;
-                    case DROP_TABLES:
+                    case _2_:
                         System.out.println("Are you sure you want to drop tables? (y/n):");
                         String confirmDropTables = scanner.nextLine().trim().toLowerCase();
                         if (confirmDropTables.equals("y")) {
@@ -101,7 +102,7 @@ public class Service {
                             System.out.println("Operation canceled.");
                         }
                         break;
-                    case DROP_DATABASE:
+                    case _3_:
                         System.out.println("Are you sure you want to drop the database? (y/n):");
                         String confirmDropDatabase = scanner.nextLine().trim().toLowerCase();
                         if (confirmDropDatabase.equals("y")) {
@@ -111,11 +112,11 @@ public class Service {
                             System.out.println("Operation canceled.");
                         }
                         break;
-                    case ADD_DATA:
+                    case _4_:
                     	database.addData();
                     	System.out.println("Data Added...");
                     	break;
-                    case CREATE_USER_PROFILE:
+                    case _5_:
                         // Prompt user for input for createUser operation
                         System.out.println("Enter user name:");
                         String userName = scanner.nextLine();
@@ -140,7 +141,7 @@ public class Service {
                         System.out.println("User created with UID: " + result);
                         break;
 
-                    case DELETE_USER_PROFILE:
+                    case _6_:
                         // Prompt user for input for deleteUser operation
                         System.out.println("Enter the UID of the user to delete:");
                         int uidToDelete = scanner.nextInt();
@@ -149,7 +150,7 @@ public class Service {
                         System.out.println("User with UID " + uidToDelete + " deleted.");
                         break;
 
-                    case BOOK_LISTING:
+                    case _7_:
                         // Prompt user for input for bookListing operation
                         System.out.println("Enter listing ID (LID) to book:");
                         int lidToBook = scanner.nextInt();
@@ -171,7 +172,7 @@ public class Service {
                         System.out.println("Booking created with RID: " + bookingResult);
                         break;
 
-                    case REMOVE_LISTING:
+                    case _8_:
                         // Prompt user for input for removeListing operation
                         System.out.println("Enter listing ID (LID) to remove:");
                         int lidToRemove = scanner.nextInt();
@@ -183,7 +184,7 @@ public class Service {
                         System.out.println("Listing with LID " + lidToRemove + " removed.");
                         break;
 
-                    case CANCEL_BOOKING:
+                    case _9_:
                         // Prompt user for input for cancelBooking operation
                         System.out.println("Enter booking ID (RID) to cancel:");
                         int ridToCancel = scanner.nextInt();
@@ -195,7 +196,7 @@ public class Service {
                         System.out.println("Booking with RID " + ridToCancel + " canceled.");
                         break;
 
-                    case CREATE_LISTING:
+                    case _10_:
                         // Prompt user for input for createListing operation
                         System.out.println("Enter listing type:");
                         String listingType = scanner.nextLine();
@@ -221,7 +222,7 @@ public class Service {
                         System.out.println("Listing created with LID: " + listingResult);
                         break;
 
-                    case UPDATE_LISTING_PRICE:
+                    case _11_:
                         // Prompt user for input for updateListingPrice operation
                         System.out.println("Enter listing ID (LID) to update price:");
                         int lidToUpdatePrice = scanner.nextInt();
@@ -238,7 +239,7 @@ public class Service {
                         System.out.println("Price updated for listing with LID " + lidToUpdatePrice);
                         break;
 
-                    case UPDATE_LISTING_AVAILABILITY:
+                    case _12_:
                         // Prompt user for input for updateListingAvailability operation
                         System.out.println("Enter listing ID (LID) to update availability:");
                         int lidToUpdateAvailability = scanner.nextInt();
@@ -254,7 +255,7 @@ public class Service {
                         System.out.println("Availability updated for listing with LID " + lidToUpdateAvailability);
                         break;
 
-                    case INSERT_RENTER_COMMENT:
+                    case _13_:
                         // Prompt user for input for insertRenterComment operation
                         System.out.println("Enter host ID (UID) for renter comment:");
                         int hostUidForRenterComment = scanner.nextInt();
@@ -271,7 +272,7 @@ public class Service {
                         System.out.println("Renter comment inserted.");
                         break;
 
-                    case INSERT_HOST_COMMENT:
+                    case _14_:
                         // Prompt user for input for insertHostComment operation
                         System.out.println("Enter renter ID (UID) for host comment:");
                         int renterUidForHostComment = scanner.nextInt();
@@ -288,7 +289,7 @@ public class Service {
                         System.out.println("Host comment inserted.");
                         break;
 
-                    case SEARCH_LISTINGS_BY_LOCATION:
+                    case _15_:
                         // Prompt user for input for searchListingsByLocation operation
                         System.out.println("Enter latitude for search:");
                         double searchLatitude = scanner.nextDouble();
@@ -306,7 +307,7 @@ public class Service {
                         displayListings(listingsByLocation);
                         break;
 
-                    case SEARCH_LISTINGS_BY_POSTAL_CODE:
+                    case _16_:
                         // Prompt user for input for searchListingsByPostalCode operation
                         System.out.println("Enter postal code for search:");
                         String searchPostalCode = scanner.nextLine();
@@ -320,7 +321,7 @@ public class Service {
                         displayListings(listingsByPostalCode);
                         break;
 
-                    case SEARCH_LISTING_BY_ADDRESS:
+                    case _17_:
                         // Prompt user for input for searchListingByAddress operation
                         System.out.println("Enter address for search:");
                         String searchAddress = scanner.nextLine();
@@ -336,7 +337,7 @@ public class Service {
                         break;
 
                     // Inside the performOperations() method
-                    case SEARCH_LISTINGS_BY_DATE_RANGE:
+                    case _18_:
                         // Prompt user for input for searchListingsByDateRange operation
                         System.out.println("Enter start date (yyyy-mm-dd) for search:");
                         String startDateByDate = scanner.nextLine();
@@ -353,7 +354,7 @@ public class Service {
                         displayListings(listingsByDateRange);
                         break;
 
-                    case SEARCH_LISTINGS_WITH_FILTERS:
+                    case _19_:
                         // Prompt user for input for searchListingsWithFilters operation
                         System.out.println("Enter latitude for search:");
                         double searchLatWithFilters = scanner.nextDouble();
@@ -398,49 +399,49 @@ public class Service {
                         displayListings(listingsWithFilters);
                         break;
                     
-                    case REPORT_TOTAL_BOOKING_BY_DATE_AND_CITY:
+                    case _20_:
                         Report.totalBookingByDateAndCity(database.getConnection(), scanner);
                         break;
-                    case REPORT_TOTAL_BOOKING_BY_DATE_AND_POSTAL:
+                    case _21_:
                         Report.totalBookingByDateAndPostal(database.getConnection(), scanner);
                         break;
-                    case REPORT_TOTAL_LISTING_BY_COUNTRY:
+                    case _22_:
                         Report.totalListingByCountry(database.getConnection(), scanner);
                         break;
-                    case REPORT_TOTAL_LISTING_BY_COUNTRY_AND_CITY:
+                    case _23_:
                         Report.totalListingByCountryAndCity(database.getConnection(), scanner);
                         break;
-                    case REPORT_TOTAL_LISTING_BY_POSTAL:
+                    case _24_:
                         Report.totalListingByPostal(database.getConnection(), scanner);
                         break;
-                    case REPORT_RANK_HOSTS_PER_COUNTRY:
+                    case _25_:
                         Report.rankHostsPerCountry(database.getConnection(), scanner);
                         break;
-                    case REPORT_RANK_HOSTS_PER_COUNTRY_AND_CITY:
+                    case _26_:
                         Report.rankHostsPerCountryAndCity(database.getConnection(), scanner);
                         break;
-                    case REPORT_COMMERCIAL_HOSTS:
+                    case _27_:
                         Report.commercialHosts(database.getConnection(), scanner);
                         break;
-                    case REPORT_RANK_RENTER_BETWEEN_DATE:
+                    case _28_:
                         Report.rankRenterBetweenDate(database.getConnection(), scanner);
                         break;
-                    case REPORT_RANK_RENTER_BETWEEN_DATE_AND_CITY:
+                    case _29_:
                         Report.rankRenterBetweenDateAndCity(database.getConnection(), scanner);
                         break;
-                    case REPORT_MOST_HOST_CANCELS:
+                    case _30_:
                         Report.mostHostCancels(database.getConnection());
                         break;
-                    case REPORT_MOST_RENTER_CANCELS:
+                    case _31_:
                         Report.mostRenterCancels(database.getConnection());
                         break;
-                    case REPORT_GET_NOUN_PRASES_FOR_LISTING:
+                    case _32_:
                         Report.getNounPrasesForlisting(database.getConnection());
                         break;
-                    case HOST_TOOL_KIT_SUGGESTED_PRICE:
+                    case _33_:
                         HostToolKit.suggestedPrice(database.getConnection(), scanner);
                         break;
-                    case HOST_TOOL_KIT_SUGGESTED_AMENITIES:
+                    case _34_:
                         HostToolKit.suggestedAmenities(database.getConnection(), scanner);
                         break;
                     case QUIT:
@@ -498,7 +499,7 @@ public class Service {
         System.out.println("34. Host Tool Kit Suggested Amenities");
         System.out.println("35. Quit");
         System.out.println("=========================");
-        System.out.println("Enter the name of the operation you want to perform (Use _ instead of space):");
+        System.out.println("Enter the number of the operation you want to perform:");
     }
 
 
