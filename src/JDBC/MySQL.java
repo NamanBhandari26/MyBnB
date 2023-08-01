@@ -69,18 +69,19 @@ public class MySQL implements SQL {
   
 
   public void addData() throws SQLException {
-    int uid1 = User.insert(connection, "Bob Smith", "1 fake st. ON", "1998-06-15", "Retail Operations",
-        "124312341", "Visa", true, false);
-    int uid2 = User.insert(connection, "John Doe", "123 notreal st. ON", "2002-10-25", "CEO",
-        "124312342", "Visa", true, false);
-    int uid3 = User.insert(connection, "Ye Haw", "321 fake st. ON", "2001-09-03", "Sleeps",
-        "124312343", "Visa", true, false);
-    int uid4 = User.insert(connection, "Jim Job", "14 fake st. ON", "1997-04-01", "Works",
-        "124312344", "Visa", true, true);
-    int uid5 = User.insert(connection, "Ligma Ben", "15 fake st. ON", "1999-08-30", "Tims",
-        "124312345", "Visa", false, true);
-    int uid6 = User.insert(connection, "Simga Den", "13 fake st. ON", "1999-08-30", "Prof",
-        "124312346", "Visa", false, true);
+	  int uid1 = User.insert(connection, "Bob Smith", "1 fake st. AB", "1998-06-15", "Retail Operations",
+			    "124312341", "Visa", true, false);
+	  int uid2 = User.insert(connection, "John Doe", "123 notreal st. BC", "2002-10-25", "CEO",
+			    "124312342", "Interac", true, false);
+	  int uid3 = User.insert(connection, "Ye Haw", "321 fake st. MB", "2001-09-03", "Sleeps",
+			    "124312343", "Mastercard", true, false);
+	  int uid4 = User.insert(connection, "Jim Job", "14 fake st. NB", "1997-04-01", "Works",
+			    "124312344", "Visa", true, true);
+	  int uid5 = User.insert(connection, "Ligma Ben", "15 fake st. NL", "1999-08-30", "Tims",
+			    "124312345", "Interac", false, true);
+	  int uid6 = User.insert(connection, "Simga Den", "13 fake st. NT", "1999-08-30", "Prof",
+			    "124312346", "Mastercard", false, true);
+
 
     Amenities.insert(connection, "Wifi");
     Amenities.insert(connection, "Washer");
@@ -107,22 +108,23 @@ public class MySQL implements SQL {
     Amenities.insert(connection, "Smoke alarm");
     Amenities.insert(connection, "Carbon monoxide alarm");
 
-    int lid1 = Listing.insert(connection, "Studio", 124, 124, "1 list rd. ON", "M4X 1G6", "Toronto", "Canada", uid4);
+    int lid1 = Listing.insert(connection, "Studio", 124, 124, "1 list rd. MB", "M4X 1G6", "Toronto", "Canada", uid4);
     int lid2 = Listing.insert(connection, "Apartment", 123, 123, "2 list rd. ON", "M4X 1G5", "Toronto", "Canada", uid4);
-    int lid3 = Listing.insert(connection, "Home", 122, 122, "3 list rd. ON", "M4X 1G4", "Toronto", "Canada", uid5);
+    int lid3 = Listing.insert(connection, "Home", 122, 122, "3 list rd. NB", "M4X 1G4", "Toronto", "Canada", uid5);
 
-    Listing.insert(connection, "Apartment", 129, 129, "7 list rd. ON", "M1X 1G5", "Toronto", "Canada", uid5);
-    Listing.insert(connection, "Apartment", 124, 124, "3 list rd. apt 1 ON", "M1X 1G4", "Toronto", "Canada", uid6);
-    Listing.insert(connection, "Apartment", 124, 124, "3 list rd. apt 2 ON", "M1X 1G4", "Toronto", "Canada", uid6);
-    Listing.insert(connection, "Apartment", 124, 124, "3 list rd. apt 3 ON", "M1X 1G4", "Toronto", "Canada", uid6);
-    Listing.insert(connection, "Apartment", 124, 124, "3 list rd. apt 4 ON", "M1X 1G4", "Toronto", "Canada", uid6);
-    Listing.insert(connection, "Apartment", 124, 124, "3 list rd. apt 5 ON", "M1X 1G4", "Toronto", "Canada", uid6);
-    Listing.insert(connection, "Apartment", 124, 124, "3 list rd. apt 6 ON", "M1X 1G4", "Toronto", "Canada", uid6);
-    Listing.insert(connection, "Apartment", 124, 124, "3 list rd. apt 7 ON", "M1X 1G4", "Toronto", "Canada", uid6);
-    Listing.insert(connection, "Apartment", 124, 124, "3 list rd. apt 8 ON", "M1X 1G4", "Toronto", "Canada", uid6);
-    Listing.insert(connection, "Apartment", 124, 124, "3 list rd. apt 9 ON", "M1X 1G4", "Toronto", "Canada", uid6);
-    Listing.insert(connection, "Apartment", 124, 124, "3 list rd. apt 10 ON", "M1X 1G4", "Toronto", "Canada", uid6);
-    Listing.insert(connection, "Apartment", 124, 124, "3 list rd. apt 11 ON", "M1X 1G4", "Toronto", "Canada", uid6);
+    Listing.insert(connection, "Apartment", 129, 129, "7 list rd. ON", "A1B 2C3", "Vancouver", "Canada", uid5);
+    Listing.insert(connection, "Apartment", 124, 124, "3 list rd. apt 1 QC", "D4E 5F6", "Montreal", "Canada", uid6);
+    Listing.insert(connection, "Apartment", 124, 124, "3 list rd. apt 2 NB", "G7H 8I9", "Calgary", "Canada", uid6);
+    Listing.insert(connection, "Apartment", 124, 124, "3 list rd. apt 3 MB", "J1K 2L3", "Ottawa", "Canada", uid6);
+    Listing.insert(connection, "Apartment", 124, 124, "3 list rd. apt 4 QC", "M2N 3O4", "Edmonton", "Canada", uid6);
+    Listing.insert(connection, "Apartment", 124, 124, "3 list rd. apt 5 AB", "P5Q 6R7", "Quebec City", "Canada", uid6);
+    Listing.insert(connection, "Apartment", 124, 124, "3 list rd. apt 6 QC", "S8T 9U0", "Winnipeg", "Canada", uid6);
+    Listing.insert(connection, "Apartment", 124, 124, "3 list rd. apt 7 NB", "V1W 2X3", "Halifax", "Canada", uid6);
+    Listing.insert(connection, "Apartment", 124, 124, "3 list rd. apt 8 MB", "Y4Z 5A6", "Toronto", "Canada", uid6);
+    Listing.insert(connection, "Apartment", 124, 124, "3 list rd. apt 9 AB", "B1C 2D3", "Toronto", "Canada", uid6);
+    Listing.insert(connection, "Apartment", 124, 124, "3 list rd. apt 10 NB", "E4F 5G6", "Toronto", "Canada", uid6);
+    Listing.insert(connection, "Apartment", 124, 124, "3 list rd. apt 11 BC", "H7I 8J9", "Toronto", "Canada", uid6);
+
 
     Rented.insert(connection, lid1, uid1, 100, "2020-01-01", "2020-01-04", false);
     Rented.insert(connection, lid2, uid2, 120, "2020-01-03", "2020-01-04", false);
