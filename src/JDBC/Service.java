@@ -309,7 +309,7 @@ public class Service {
 
                     case _16_:
                         // Prompt user for input for searchListingsByPostalCode operation
-                        System.out.println("Enter postal code for search:");
+                        System.out.println("Enter postal code for search(only first 3 letters):");
                         String searchPostalCode = scanner.nextLine();
                         System.out.println("Sort by price ascending? (true/false):");
                         boolean sortByPriceAscendingByPostal = scanner.nextBoolean();
@@ -361,7 +361,7 @@ public class Service {
                         System.out.println("Enter longitude for search:");
                         double searchLongWithFilters = scanner.nextDouble();
                         scanner.nextLine(); // Consume the newline character
-                        System.out.println("Enter postal code for search:");
+                        System.out.println("Enter postal code for search:(only first 3 letters)");
                         String searchPostalCodeWithFilters = scanner.nextLine();
                         System.out.println("Enter start date (yyyy-mm-dd) for search:");
                         String startDateWithFilters = scanner.nextLine();
