@@ -12,4 +12,6 @@ public interface SQL {
 	public void dropDatabase();
 
 	public Connection getConnection();
+	
+	public void test() throws SQLException;
 }
