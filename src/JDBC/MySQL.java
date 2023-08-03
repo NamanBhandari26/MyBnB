@@ -118,30 +118,30 @@ public class MySQL implements SQL {
         Listing.insert(connection, "Apartment", 45.501690, -73.567253, "200 René-Lévesque Blvd W", "D4E 5F6",
                 "Montreal",
                 "Canada", uid6);
-        Listing.insert(connection, "Apartment", 51.048615, -114.070846, "300 4 Ave SW", "G7H 8I9", "Calgary", "Canada",
+        Listing.insert(connection, "Apartment", 51.048615, -114.070846, "300 4 Ave SW", "G7H 8I9", "Vancouver", "Canada",
                 uid6);
-        Listing.insert(connection, "Apartment", 45.421530, -75.697193, "400 Rideau St", "J1K 2L3", "Ottawa", "Canada",
+        Listing.insert(connection, "Apartment", 45.421530, -75.697193, "400 Rideau St", "J1K 2L3", "Vancouver", "Canada",
                 uid6);
-        Listing.insert(connection, "Apartment", 53.544389, -113.490927, "500 Jasper Ave", "M2N 3O4", "Edmonton",
+        Listing.insert(connection, "Apartment", 53.544389, -113.490927, "500 Jasper Ave", "M2N 3O4", "Vancouver",
                 "Canada",
                 uid6);
-        Listing.insert(connection, "Apartment", 46.813878, -71.207981, "600 Grande Allée E", "P5Q 6R7", "Quebec City",
+        Listing.insert(connection, "Apartment", 46.813878, -71.207981, "600 Grande Allée E", "P5Q 6R7", "Vancouver",
                 "Canada", uid6);
-        Listing.insert(connection, "Apartment", 49.895077, -97.138451, "700 Portage Ave", "S8T 9U0", "Winnipeg",
+        Listing.insert(connection, "Apartment", 49.895077, -97.138451, "700 Portage Ave", "S8T 9U0", "Vancouver",
                 "Canada",
                 uid6);
-        Listing.insert(connection, "Apartment", 44.648618, -63.585948, "800 Barrington St", "V1W 2X3", "Halifax",
+        Listing.insert(connection, "Apartment", 44.648618, -63.585948, "800 Barrington St", "V1W 2X3", "Vancouver",
                 "Canada",
                 uid6);
-        Listing.insert(connection, "Apartment", 43.651070, -79.347015, "900 Dundas St W", "Y4Z 5A6", "Toronto",
+        Listing.insert(connection, "Apartment", 43.651070, -79.347015, "900 Dundas St W", "Y4Z 5A6", "Vancouver",
                 "Canada",
                 uid6);
-        Listing.insert(connection, "Apartment", 43.651070, -79.347015, "100 King St W", "B1C 2D3", "Toronto", "Canada",
+        Listing.insert(connection, "Apartment", 43.651070, -79.347015, "100 King St W", "B1C 2D3", "Vancouver", "Canada",
                 uid6);
-        Listing.insert(connection, "Apartment", 43.651070, -79.347015, "1100 Queen St E", "E4F 5G6", "Toronto",
+        Listing.insert(connection, "Apartment", 43.651070, -79.347015, "1100 Queen St E", "E4F 5G6", "Vancouver",
                 "Canada",
                 uid6);
-        Listing.insert(connection, "Apartment", 43.651070, -79.347015, "1200 Bloor St W", "H7I 8J9", "Toronto",
+        Listing.insert(connection, "Apartment", 43.651070, -79.347015, "1200 Bloor St W", "H7I 8J9", "Vancouver",
                 "Canada",
                 uid6);
 
