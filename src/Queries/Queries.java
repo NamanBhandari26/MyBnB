@@ -6,7 +6,6 @@ import java.util.List;
 
 public class Queries {
 
-    // Helper method to create a PreparedStatement  
     private static PreparedStatement prepareStatement(Connection connection, String query, Object... params)
             throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement(query);
@@ -24,7 +23,6 @@ public class Queries {
         return preparedStatement;
     }
 
-    // Helper method to count the number of placeholders (?) in the SQL query
     private static int countPlaceholders(String query) {
         int count = 0;
         int index = query.indexOf('?');
@@ -35,8 +33,6 @@ public class Queries {
         return count;
     }
 
-
-    // Helper method to execute a query and return a list of listings
     private static List<Display> executeListingQuery(Connection connection, String query, Object... params) {
         List<Display> listings = new ArrayList<>();
         try (PreparedStatement statement = prepareStatement(connection, query, params);
@@ -67,8 +63,6 @@ public class Queries {
 
     public static List<Display> searchListingsByLocation(Connection connection, double latitude, double longitude,
             double distance, boolean sortByPriceAscending) {
-        // Implement the query to return all listings within the specified distance of
-        // the given location
         String sortBy = sortByPriceAscending ? "A.Price ASC" : "Distance ASC";
         String query = "SELECT L.LID, L.Type, L.Longitude, L.Latitude, L.Address, L.PostalCode, L.City, L.Country, L.HostUID, "
                 +
@@ -83,16 +77,13 @@ public class Queries {
 
     public static List<Display> searchListingsByPostalCode(Connection connection, String postalCode,
             boolean sortByPriceAscending) {
-        // Implement the query to return all listings with postal codes matching the first 3 letters of the input
         double originLatitude = 0.0;
         double originLongitude = 0.0;
 
-        // Validate that postalCode is not null and has at least 3 characters
         if (postalCode == null || postalCode.length() == 7) {
             throw new IllegalArgumentException("Invalid postal code format.");
         }
 
-        // Extract the first three letters of the input postalCode
         String firstThreeLetters = postalCode.substring(0, 3) + "%";
 
         String sortBy = sortByPriceAscending ? "A.Price ASC" : "Distance ASC";
@@ -108,8 +99,6 @@ public class Queries {
     }
 
     public static Display searchListingByAddress(Connection connection, String address) {
-        // Implement the query to return the listing with the specified address if it
-        // exists.
         double originLatitude = 0.0;
         double originLongitude = 0.0;
 
@@ -126,8 +115,6 @@ public class Queries {
 
     public static List<Display> searchListingsByDateRange(Connection connection, String startDate, String endDate,
             boolean sortByPriceAscending) {
-        // Implement the query to return all listings available for booking in the
-        // specified date range
         double originLatitude = 0.0;
         double originLongitude = 0.0;
         String sortBy = sortByPriceAscending ? "A.Price ASC" : "Distance ASC";
@@ -151,12 +138,10 @@ public class Queries {
             String postalCode, List<Integer> amenityIds, String startDate, String endDate, double minPrice,
             double maxPrice, boolean sortByPriceAscending) {
     	
-        // Validate that postalCode is not null and has at least 3 characters
         if (postalCode == null || postalCode.length() == 7) {
             throw new IllegalArgumentException("Invalid postal code format.");
         }
 
-        // Extract the first three letters of the input postalCode
         String firstThreeLetters = postalCode.substring(0, 3) + "%";
         
         String sortBy = sortByPriceAscending ? "A.Price ASC" : "Distance ASC";
@@ -169,12 +154,12 @@ public class Queries {
                         "JOIN Has H ON L.LID = H.LID " +
                         "LEFT JOIN Availability A ON L.LID = A.LID " +
                         "WHERE (L.PostalCode LIKE ?) " +
-                        "AND (? IS NULL OR ? IS NULL OR A.Date IS NULL OR (A.Date >= ? AND A.Date <= ?)) " + // Changed ? IS NULL to A.Price IS NOT NULL
+                        "AND (? IS NULL OR ? IS NULL OR A.Date IS NULL OR (A.Date >= ? AND A.Date <= ?)) " + 
                         "AND (L.Type IS NULL OR L.Type IN (SELECT Type FROM Listing WHERE Type = L.Type)) " +
-                        "AND (A.Price >= ? AND A.Price <= ?) "); // Changed L.Price to A.Price
-        if (amenityIds != null && !amenityIds.isEmpty()) { // Check if amenityIds is not null and not empty
+                        "AND (A.Price >= ? AND A.Price <= ?) ");
+        if (amenityIds != null && !amenityIds.isEmpty()) {
             for (int i = 0; i < amenityIds.size(); i++) {
-                queryBuilder.append("AND H.AID = ? "); // Add a condition for each amenityId
+                queryBuilder.append("AND H.AID = ? ");
             }
         }
         queryBuilder.append("ORDER BY ").append(sortBy);
@@ -190,7 +175,7 @@ public class Queries {
         params.add(endDate);
         params.add(minPrice);
         params.add(maxPrice);
-        if (amenityIds != null) { // Check if amenityIds is not null before adding to params
+        if (amenityIds != null) {
             params.addAll(amenityIds);
         }
 
